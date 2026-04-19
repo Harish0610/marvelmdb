@@ -1,0 +1,2233 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Marvel Cinematic Universe</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow:wght@300;400;500;600&family=Barlow+Condensed:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --red: #E8172B;
+    --gold: #F5A623;
+    --dark: #0A0A0F;
+    --card-bg: #111118;
+    --surface: #1A1A24;
+    --text: #E8E8F0;
+    --muted: #888899;
+    --border: rgba(255,255,255,0.07);
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--dark);
+    color: var(--text);
+    font-family: 'Barlow', sans-serif;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  body::before {
+    content: '';
+    position: fixed; inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+    pointer-events: none; z-index: 1000; opacity: 0.4;
+  }
+
+  /* ── AUTH PAGES ── */
+  .auth-page {
+    display: none;
+    position: fixed; inset: 0; z-index: 800;
+    background: var(--dark);
+    overflow-y: auto;
+    animation: pageIn 0.45s cubic-bezier(.22,.8,.44,1) both;
+  }
+  .auth-page.active { display: flex; align-items: stretch; min-height: 100vh; }
+
+  .auth-split {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    width: 100%; min-height: 100vh;
+  }
+
+  @media (max-width: 800px) {
+    .auth-split { grid-template-columns: 1fr; }
+    .auth-visual { display: none; }
+  }
+
+  .auth-visual {
+    position: relative;
+    overflow: hidden;
+    background: #05050a;
+  }
+
+  .auth-visual-bg {
+    position: absolute; inset: 0;
+    background-size: cover; background-position: center;
+    filter: brightness(0.35) saturate(1.3);
+    transform: scale(1.05);
+    transition: opacity 0.8s;
+  }
+
+  .auth-visual-overlay {
+    position: absolute; inset: 0;
+    background: linear-gradient(135deg, rgba(232,23,43,0.25) 0%, rgba(10,10,15,0.6) 60%);
+  }
+
+  .auth-visual-content {
+    position: relative; z-index: 1;
+    display: flex; flex-direction: column;
+    justify-content: flex-end;
+    padding: 48px;
+    height: 100%;
+  }
+
+  .auth-visual-logo {
+    position: absolute; top: 40px; left: 48px;
+    display: flex; align-items: center; gap: 14px;
+  }
+
+  .auth-visual-tagline {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(36px, 4vw, 56px);
+    line-height: 0.95;
+    letter-spacing: 1px;
+    background: linear-gradient(135deg, #fff 40%, #aaa 100%);
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    margin-bottom: 16px;
+  }
+
+  .auth-visual-sub {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 14px; letter-spacing: 2px;
+    text-transform: uppercase; color: var(--muted);
+  }
+
+  .auth-film-count {
+    display: inline-flex; align-items: center; gap: 10px;
+    background: rgba(232,23,43,0.15);
+    border: 1px solid rgba(232,23,43,0.3);
+    padding: 8px 16px; margin-top: 20px;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 13px; letter-spacing: 1.5px; text-transform: uppercase;
+    color: var(--gold);
+    clip-path: polygon(6px 0, 100% 0, calc(100% - 6px) 100%, 0 100%);
+  }
+
+  /* ── AUTH FORM PANEL ── */
+  .auth-form-panel {
+    display: flex; flex-direction: column;
+    justify-content: center; align-items: center;
+    padding: 60px 5vw;
+    background: var(--dark);
+    position: relative;
+  }
+
+  .auth-form-inner {
+    width: 100%; max-width: 400px;
+  }
+
+  .auth-back-btn {
+    position: absolute; top: 28px; left: 28px;
+    background: transparent;
+    border: 1px solid var(--border);
+    color: var(--muted);
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 12px; letter-spacing: 1.5px;
+    text-transform: uppercase; padding: 8px 16px;
+    cursor: pointer;
+    clip-path: polygon(6px 0, 100% 0, calc(100% - 4px) 100%, 0 100%);
+    transition: all 0.2s;
+  }
+  .auth-back-btn:hover { border-color: var(--red); color: #fff; background: rgba(232,23,43,0.1); }
+
+  .auth-label {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 12px; letter-spacing: 3px;
+    text-transform: uppercase; color: var(--red);
+    margin-bottom: 12px;
+  }
+
+  .auth-heading {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(40px, 5vw, 58px);
+    line-height: 0.95; letter-spacing: 1px;
+    background: linear-gradient(135deg, #fff 40%, #888);
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    margin-bottom: 8px;
+  }
+
+  .auth-subtext {
+    font-size: 14px; color: var(--muted);
+    margin-bottom: 36px; line-height: 1.5;
+  }
+
+  .auth-subtext a {
+    color: var(--red); text-decoration: none; font-weight: 600;
+    cursor: pointer;
+  }
+  .auth-subtext a:hover { text-decoration: underline; }
+
+  /* Form Fields */
+  .form-group { margin-bottom: 18px; }
+
+  .form-label {
+    display: block;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 11px; letter-spacing: 2px;
+    text-transform: uppercase; color: var(--muted);
+    margin-bottom: 8px;
+  }
+
+  .form-input {
+    width: 100%;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    color: var(--text);
+    font-family: 'Barlow', sans-serif;
+    font-size: 15px;
+    padding: 12px 16px;
+    outline: none;
+    transition: border-color 0.2s, box-shadow 0.2s;
+    clip-path: polygon(4px 0, 100% 0, calc(100% - 4px) 100%, 0 100%);
+  }
+
+  .form-input::placeholder { color: rgba(136,136,153,0.5); }
+
+  .form-input:focus {
+    border-color: rgba(232,23,43,0.6);
+    box-shadow: 0 0 0 2px rgba(232,23,43,0.12);
+    background: rgba(26,26,36,0.9);
+  }
+
+  .form-input.error { border-color: rgba(232,23,43,0.8); }
+
+  .form-error {
+    font-size: 12px; color: var(--red); margin-top: 5px;
+    font-family: 'Barlow Condensed', sans-serif;
+    letter-spacing: 0.5px;
+    display: none;
+  }
+  .form-error.show { display: block; }
+
+  .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+
+  .password-wrap { position: relative; }
+  .password-toggle {
+    position: absolute; right: 14px; top: 50%; transform: translateY(-50%);
+    background: none; border: none; color: var(--muted);
+    cursor: pointer; font-size: 14px; padding: 4px;
+    transition: color 0.2s;
+  }
+  .password-toggle:hover { color: var(--text); }
+
+  .form-divider {
+    display: flex; align-items: center; gap: 12px;
+    margin: 22px 0;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 11px; letter-spacing: 2px;
+    text-transform: uppercase; color: var(--muted);
+  }
+  .form-divider::before, .form-divider::after {
+    content: ''; flex: 1; height: 1px; background: var(--border);
+  }
+
+  .auth-submit-btn {
+    width: 100%;
+    background: var(--red);
+    border: none; color: #fff;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 18px; letter-spacing: 2px;
+    padding: 14px;
+    cursor: pointer;
+    clip-path: polygon(6px 0, 100% 0, calc(100% - 6px) 100%, 0 100%);
+    transition: background 0.2s, transform 0.15s;
+    margin-top: 8px;
+  }
+  .auth-submit-btn:hover { background: #c91224; }
+  .auth-submit-btn:active { transform: scale(0.98); }
+  .auth-submit-btn.loading { opacity: 0.7; pointer-events: none; }
+
+  .auth-success {
+    display: none;
+    text-align: center;
+    padding: 32px 0;
+  }
+  .auth-success.show { display: block; }
+  .success-icon {
+    font-size: 48px; margin-bottom: 16px;
+    animation: successPop 0.5s cubic-bezier(.22,.8,.44,1);
+  }
+  @keyframes successPop {
+    from { transform: scale(0.5); opacity: 0; }
+    to   { transform: scale(1); opacity: 1; }
+  }
+  .success-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 32px; letter-spacing: 1px; margin-bottom: 8px;
+    color: var(--gold);
+  }
+  .success-sub { font-size: 14px; color: var(--muted); line-height: 1.5; }
+
+  /* Strength Meter */
+  .password-strength { margin-top: 8px; }
+  .strength-bar {
+    height: 3px; background: var(--border);
+    display: flex; gap: 3px; margin-bottom: 4px;
+  }
+  .strength-seg {
+    flex: 1; height: 100%;
+    background: var(--border);
+    transition: background 0.3s;
+  }
+  .strength-seg.weak { background: #E8172B; }
+  .strength-seg.fair { background: var(--gold); }
+  .strength-seg.good { background: #4CAF50; }
+  .strength-label {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 10px; letter-spacing: 1.5px; text-transform: uppercase;
+    color: var(--muted);
+  }
+
+  /* Terms checkbox */
+  .checkbox-group {
+    display: flex; align-items: flex-start; gap: 10px;
+    margin: 16px 0;
+  }
+  .checkbox-group input[type="checkbox"] {
+    width: 16px; height: 16px; flex-shrink: 0; margin-top: 2px;
+    accent-color: var(--red); cursor: pointer;
+  }
+  .checkbox-group label {
+    font-size: 13px; color: var(--muted); line-height: 1.4; cursor: pointer;
+  }
+  .checkbox-group label a { color: var(--red); text-decoration: none; }
+  .checkbox-group label a:hover { text-decoration: underline; }
+
+  /* ── NAV HEADER ── */
+  header {
+    position: relative;
+    padding: 80px 5vw 60px;
+    overflow: hidden;
+    border-bottom: 1px solid var(--border);
+  }
+
+  header::before {
+    content: '';
+    position: absolute; inset: 0;
+    background: radial-gradient(ellipse 80% 60% at 50% 0%, rgba(232,23,43,0.18) 0%, transparent 70%);
+    pointer-events: none;
+  }
+
+  .header-inner {
+    position: relative; z-index: 1;
+    max-width: 1400px; margin: 0 auto;
+    display: flex; align-items: flex-end; justify-content: space-between; gap: 24px;
+    flex-wrap: wrap;
+  }
+
+  .brand { display: flex; align-items: center; gap: 18px; }
+
+  .marvel-logo {
+    background: var(--red);
+    color: #fff;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(22px, 3vw, 32px);
+    letter-spacing: 2px;
+    padding: 6px 14px 4px;
+    clip-path: polygon(0 0, 100% 0, 96% 100%, 4% 100%);
+    user-select: none;
+  }
+
+  .site-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(36px, 7vw, 88px);
+    line-height: 0.9;
+    letter-spacing: 1px;
+    background: linear-gradient(135deg, #fff 40%, #aaa 100%);
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    animation: titleFade 0.9s ease both;
+  }
+
+  @keyframes titleFade {
+    from { opacity: 0; transform: translateY(30px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  .header-meta {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 13px; letter-spacing: 2px;
+    text-transform: uppercase; color: var(--muted);
+    animation: titleFade 0.9s 0.2s ease both;
+  }
+
+  /* Header right side: filters + auth buttons */
+  .header-right {
+    display: flex; flex-direction: column; align-items: flex-end; gap: 14px;
+  }
+
+  .header-auth-bar {
+    display: flex; align-items: center; gap: 10px;
+    animation: titleFade 0.9s 0.15s ease both;
+  }
+
+  /* Logged-in user display */
+  .user-pill {
+    display: none;
+    align-items: center; gap: 8px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    padding: 6px 14px 6px 10px;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 13px; letter-spacing: 1px; text-transform: uppercase;
+    color: var(--text);
+    clip-path: polygon(4px 0, 100% 0, calc(100% - 4px) 100%, 0 100%);
+  }
+  .user-pill.show { display: flex; }
+  .user-avatar {
+    width: 26px; height: 26px;
+    background: var(--red);
+    border-radius: 0;
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 14px; color: #fff;
+    clip-path: polygon(2px 0, 100% 0, calc(100% - 2px) 100%, 0 100%);
+  }
+
+  .btn-login {
+    background: transparent;
+    border: 1px solid var(--border);
+    color: var(--muted);
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 12px; letter-spacing: 1.5px;
+    text-transform: uppercase; padding: 7px 18px;
+    cursor: pointer;
+    clip-path: polygon(4px 0, 100% 0, calc(100% - 4px) 100%, 0 100%);
+    transition: all 0.2s;
+  }
+  .btn-login:hover { border-color: rgba(232,23,43,0.5); color: #fff; }
+
+  .btn-signup {
+    background: var(--red);
+    border: 1px solid var(--red);
+    color: #fff;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 12px; letter-spacing: 1.5px;
+    text-transform: uppercase; padding: 7px 18px;
+    cursor: pointer;
+    clip-path: polygon(4px 0, 100% 0, calc(100% - 4px) 100%, 0 100%);
+    transition: background 0.2s;
+  }
+  .btn-signup:hover { background: #c91224; }
+
+  .btn-logout {
+    background: transparent;
+    border: 1px solid rgba(232,23,43,0.4);
+    color: var(--muted);
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 12px; letter-spacing: 1.5px;
+    text-transform: uppercase; padding: 7px 16px;
+    cursor: pointer;
+    clip-path: polygon(4px 0, 100% 0, calc(100% - 4px) 100%, 0 100%);
+    transition: all 0.2s;
+    display: none;
+  }
+  .btn-logout:hover { background: rgba(232,23,43,0.15); color: #fff; }
+  .btn-logout.show { display: block; }
+
+  .phase-filters {
+    display: flex; gap: 8px; flex-wrap: wrap;
+    animation: titleFade 0.9s 0.35s ease both;
+    justify-content: flex-end;
+  }
+
+  .phase-btn {
+    background: transparent;
+    border: 1px solid var(--border);
+    color: var(--muted);
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 12px; letter-spacing: 1.5px;
+    text-transform: uppercase; padding: 7px 16px;
+    cursor: pointer;
+    transition: all 0.2s;
+    clip-path: polygon(4px 0, 100% 0, calc(100% - 4px) 100%, 0 100%);
+  }
+  .phase-btn:hover, .phase-btn.active {
+    background: var(--red); border-color: var(--red); color: #fff;
+  }
+
+  /* ── GRID ── */
+  .grid-section { padding: 60px 5vw 80px; max-width: 1400px; margin: 0 auto; }
+
+  .grid-header { display: flex; align-items: center; gap: 16px; margin-bottom: 40px; }
+
+  .grid-label {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 13px; letter-spacing: 3px;
+    text-transform: uppercase; color: var(--red);
+  }
+
+  .grid-line { flex: 1; height: 1px; background: var(--border); }
+
+  .movie-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+    gap: 24px;
+  }
+
+  /* ── CARD ── */
+  .card {
+    position: relative;
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    cursor: pointer;
+    overflow: hidden;
+    transition: transform 0.35s cubic-bezier(.22,.8,.44,1), box-shadow 0.35s ease, border-color 0.3s;
+    animation: cardIn 0.6s ease both;
+    clip-path: polygon(0 0, 100% 0, 100% calc(100% - 12px), calc(100% - 12px) 100%, 0 100%);
+  }
+
+  .card:hover {
+    transform: translateY(-8px) scale(1.02);
+    box-shadow: 0 24px 60px rgba(0,0,0,0.6), 0 0 0 1px rgba(232,23,43,0.4);
+    border-color: rgba(232,23,43,0.5);
+    z-index: 2;
+  }
+
+  @keyframes cardIn {
+    from { opacity: 0; transform: translateY(24px) scale(0.97); }
+    to   { opacity: 1; transform: translateY(0) scale(1); }
+  }
+
+  .card-poster { position: relative; width: 100%; aspect-ratio: 2/3; overflow: hidden; }
+
+  .card-poster img {
+    width: 100%; height: 100%; object-fit: cover;
+    transition: transform 0.6s cubic-bezier(.22,.8,.44,1), filter 0.4s;
+    filter: brightness(0.92) saturate(0.9);
+  }
+
+  .card:hover .card-poster img { transform: scale(1.08); filter: brightness(1.05) saturate(1.1); }
+
+  .card-overlay {
+    position: absolute; inset: 0;
+    background: linear-gradient(to top, rgba(10,10,15,0.95) 0%, rgba(10,10,15,0.3) 40%, transparent 70%);
+    transition: opacity 0.3s;
+  }
+
+  .card-badge {
+    position: absolute; top: 12px; left: 12px;
+    background: var(--red);
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 10px; letter-spacing: 1.5px;
+    text-transform: uppercase; padding: 3px 8px;
+    clip-path: polygon(0 0, 100% 0, calc(100% - 3px) 100%, 3px 100%);
+  }
+
+  .card-rating {
+    position: absolute; top: 12px; right: 12px;
+    display: flex; align-items: center; gap: 5px;
+    background: rgba(10,10,15,0.75);
+    backdrop-filter: blur(8px);
+    border: 1px solid var(--border);
+    padding: 4px 9px;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 13px; font-weight: 700; color: var(--gold);
+  }
+
+  .star { font-size: 11px; color: var(--gold); }
+
+  .card-info { padding: 16px 16px 18px; }
+
+  .card-num {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 11px; letter-spacing: 2px;
+    text-transform: uppercase; color: var(--muted); margin-bottom: 4px;
+  }
+
+  .card-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(18px, 2vw, 22px);
+    letter-spacing: 0.5px; line-height: 1.1; color: #fff;
+    transition: color 0.2s;
+  }
+  .card:hover .card-title { color: var(--gold); }
+
+  .card-year { font-size: 12px; color: var(--muted); margin-top: 5px; font-family: 'Barlow Condensed', sans-serif; letter-spacing: 1px; }
+
+  .card-cta {
+    position: absolute; inset: 0;
+    display: flex; align-items: center; justify-content: center;
+    opacity: 0; transition: opacity 0.3s; pointer-events: none;
+  }
+  .card:hover .card-cta { opacity: 1; }
+
+  .cta-pill {
+    background: var(--red); color: #fff;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 13px; letter-spacing: 2px; text-transform: uppercase; padding: 10px 22px;
+    clip-path: polygon(6px 0, 100% 0, calc(100% - 6px) 100%, 0 100%);
+    transform: translateY(8px); transition: transform 0.3s 0.05s;
+    pointer-events: none;
+  }
+  .card:hover .cta-pill { transform: translateY(0); }
+
+  /* ── DETAIL PAGE ── */
+  .detail-page {
+    display: none;
+    position: fixed; inset: 0; z-index: 500;
+    background: var(--dark);
+    overflow-y: auto;
+    animation: pageIn 0.45s cubic-bezier(.22,.8,.44,1) both;
+  }
+  .detail-page.active { display: block; }
+
+  @keyframes pageIn {
+    from { opacity: 0; transform: scale(0.97); }
+    to   { opacity: 1; transform: scale(1); }
+  }
+
+  .detail-backdrop {
+    position: fixed; inset: 0;
+    background-size: cover; background-position: center;
+    filter: blur(40px) brightness(0.25) saturate(1.4);
+    transform: scale(1.1); z-index: 0;
+  }
+
+  .detail-inner { position: relative; z-index: 1; max-width: 1100px; margin: 0 auto; padding: 0 5vw 80px; }
+
+  .detail-nav { display: flex; align-items: center; gap: 16px; padding: 28px 0 40px; }
+
+  .back-btn {
+    display: flex; align-items: center; gap: 8px;
+    background: rgba(255,255,255,0.06);
+    border: 1px solid var(--border);
+    color: var(--text);
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 13px; letter-spacing: 1.5px; text-transform: uppercase; padding: 10px 20px;
+    cursor: pointer;
+    clip-path: polygon(8px 0, 100% 0, calc(100% - 4px) 100%, 0 100%);
+    transition: background 0.2s, border-color 0.2s;
+  }
+  .back-btn:hover { background: rgba(232,23,43,0.15); border-color: rgba(232,23,43,0.4); }
+
+  .detail-content { display: grid; grid-template-columns: 280px 1fr; gap: 48px; align-items: start; }
+  @media (max-width: 700px) { .detail-content { grid-template-columns: 1fr; } }
+
+  .detail-poster {
+    position: relative;
+    clip-path: polygon(0 0, 100% 0, 100% calc(100% - 16px), calc(100% - 16px) 100%, 0 100%);
+    overflow: hidden;
+    box-shadow: 0 32px 80px rgba(0,0,0,0.7);
+    animation: posterIn 0.6s 0.15s cubic-bezier(.22,.8,.44,1) both;
+  }
+  @keyframes posterIn {
+    from { opacity: 0; transform: translateX(-30px); }
+    to   { opacity: 1; transform: translateX(0); }
+  }
+
+  .detail-poster img { width: 100%; display: block; }
+
+  .detail-info { animation: infoIn 0.6s 0.25s cubic-bezier(.22,.8,.44,1) both; }
+  @keyframes infoIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  .detail-phase { font-family: 'Barlow Condensed', sans-serif; font-size: 12px; letter-spacing: 3px; text-transform: uppercase; color: var(--red); margin-bottom: 10px; }
+
+  .detail-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(42px, 7vw, 80px);
+    line-height: 0.9; letter-spacing: 1px; margin-bottom: 16px;
+    background: linear-gradient(135deg, #fff 50%, #888);
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  }
+
+  .detail-meta-row { display: flex; align-items: center; gap: 20px; flex-wrap: wrap; margin-bottom: 28px; }
+
+  .detail-rating-big { display: flex; align-items: center; gap: 6px; font-family: 'Bebas Neue', sans-serif; font-size: 28px; color: var(--gold); }
+  .detail-rating-big span { font-size: 14px; color: var(--muted); font-family: 'Barlow', sans-serif; }
+
+  .meta-tag {
+    background: var(--surface); border: 1px solid var(--border);
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 12px; letter-spacing: 1.2px; text-transform: uppercase; color: var(--muted); padding: 5px 12px;
+  }
+
+  .detail-divider { width: 48px; height: 3px; background: linear-gradient(90deg, var(--red), transparent); margin-bottom: 22px; }
+
+  .detail-summary { font-size: 15px; line-height: 1.75; color: rgba(232,232,240,0.8); margin-bottom: 32px; }
+
+  .detail-stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 32px; }
+  @media (max-width: 600px) { .detail-stats { grid-template-columns: repeat(2, 1fr); } }
+
+  .stat-box { background: var(--surface); border: 1px solid var(--border); padding: 16px; clip-path: polygon(0 0, 100% 0, 100% calc(100% - 8px), calc(100% - 8px) 100%, 0 100%); }
+  .stat-label { font-family: 'Barlow Condensed', sans-serif; font-size: 10px; letter-spacing: 2px; text-transform: uppercase; color: var(--muted); margin-bottom: 4px; }
+  .stat-value { font-family: 'Bebas Neue', sans-serif; font-size: 22px; color: #fff; letter-spacing: 0.5px; }
+
+  .detail-heroes { margin-top: 32px; }
+  .heroes-label { font-family: 'Barlow Condensed', sans-serif; font-size: 11px; letter-spacing: 2.5px; text-transform: uppercase; color: var(--muted); margin-bottom: 12px; }
+  .heroes-list { display: flex; gap: 8px; flex-wrap: wrap; }
+  .hero-chip {
+    background: rgba(232,23,43,0.1); border: 1px solid rgba(232,23,43,0.25); color: #fff;
+    font-family: 'Barlow Condensed', sans-serif; font-size: 13px; letter-spacing: 1px; padding: 6px 14px;
+    clip-path: polygon(4px 0, 100% 0, calc(100% - 4px) 100%, 0 100%);
+    transition: background 0.2s, transform 0.2s, box-shadow 0.2s, border-color 0.2s;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero-chip::after {
+    content: ''; position: absolute; inset: 0;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.08), transparent);
+    transform: translateX(-100%);
+    transition: transform 0.4s;
+  }
+  .hero-chip:hover::after { transform: translateX(100%); }
+  .hero-chip:hover {
+    background: rgba(232,23,43,0.3);
+    border-color: rgba(232,23,43,0.6);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(232,23,43,0.3);
+  }
+
+  /* ── SCROLLBAR ── */
+  ::-webkit-scrollbar { width: 5px; }
+  ::-webkit-scrollbar-track { background: var(--dark); }
+  ::-webkit-scrollbar-thumb { background: var(--red); border-radius: 0; }
+
+  @media (max-width: 600px) { header { padding: 50px 5vw 40px; } }
+
+  /* ══════════════════════════════════════════
+     EXTRA ANIMATIONS
+  ══════════════════════════════════════════ */
+
+  /* Animated scan line on header */
+  header::after {
+    content: '';
+    position: absolute; left: 0; right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--red), transparent);
+    animation: scanLine 4s ease-in-out infinite;
+    top: 0; opacity: 0.6;
+  }
+  @keyframes scanLine {
+    0%   { transform: translateY(0); opacity: 0; }
+    10%  { opacity: 0.6; }
+    90%  { opacity: 0.6; }
+    100% { transform: translateY(200px); opacity: 0; }
+  }
+
+  /* Marvel logo pulse */
+  .marvel-logo {
+    animation: logoPulse 3s ease-in-out infinite;
+  }
+  @keyframes logoPulse {
+    0%, 100% { box-shadow: 0 0 0 0 rgba(232,23,43,0); }
+    50% { box-shadow: 0 0 18px 4px rgba(232,23,43,0.35); }
+  }
+
+  /* Card shimmer effect on load */
+  .card::before {
+    content: '';
+    position: absolute; inset: 0; z-index: 3;
+    background: linear-gradient(105deg, transparent 40%, rgba(255,255,255,0.05) 50%, transparent 60%);
+    transform: translateX(-100%);
+    transition: none;
+  }
+  .card:hover::before {
+    animation: shimmer 0.7s ease forwards;
+  }
+  @keyframes shimmer {
+    to { transform: translateX(200%); }
+  }
+
+  /* Phase filter button ripple */
+  .phase-btn { position: relative; overflow: hidden; }
+  .phase-btn .ripple {
+    position: absolute;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.25);
+    transform: scale(0);
+    animation: rippleAnim 0.5s linear;
+    pointer-events: none;
+  }
+  @keyframes rippleAnim {
+    to { transform: scale(4); opacity: 0; }
+  }
+
+  /* Floating particles behind header */
+  .particle {
+    position: absolute;
+    width: 2px; height: 2px;
+    background: var(--red);
+    border-radius: 50%;
+    pointer-events: none;
+    animation: floatParticle linear infinite;
+    opacity: 0;
+  }
+  @keyframes floatParticle {
+    0%   { transform: translateY(0) translateX(0); opacity: 0; }
+    10%  { opacity: 0.7; }
+    90%  { opacity: 0.4; }
+    100% { transform: translateY(-120px) translateX(var(--drift)); opacity: 0; }
+  }
+
+  /* Stat box counter animation */
+  .stat-box {
+    transition: border-color 0.3s, transform 0.3s, box-shadow 0.3s;
+    animation: statReveal 0.5s ease both;
+  }
+  .stat-box:nth-child(1) { animation-delay: 0.3s; }
+  .stat-box:nth-child(2) { animation-delay: 0.4s; }
+  .stat-box:nth-child(3) { animation-delay: 0.5s; }
+  @keyframes statReveal {
+    from { opacity: 0; transform: translateY(16px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  .stat-box:hover {
+    border-color: rgba(232,23,43,0.4);
+    transform: translateY(-3px);
+    box-shadow: 0 10px 30px rgba(0,0,0,0.4);
+  }
+
+  /* Grid label animated underline */
+  .grid-label { position: relative; }
+
+  /* Detail page backdrop animated pulse */
+  .detail-backdrop {
+    animation: backdropPulse 8s ease-in-out infinite alternate;
+  }
+  @keyframes backdropPulse {
+    from { filter: blur(40px) brightness(0.25) saturate(1.4); }
+    to   { filter: blur(48px) brightness(0.3) saturate(1.6); }
+  }
+
+  /* Hero list stagger entrance */
+  .hero-chip {
+    animation: chipIn 0.4s ease both;
+  }
+  @keyframes chipIn {
+    from { opacity: 0; transform: translateX(-12px); }
+    to   { opacity: 1; transform: translateX(0); }
+  }
+
+  /* Red corner accent on cards */
+  .card::after {
+    content: '';
+    position: absolute;
+    bottom: 0; right: 0;
+    width: 0; height: 0;
+    border-style: solid;
+    border-width: 0 0 12px 12px;
+    border-color: transparent transparent var(--red) transparent;
+    opacity: 0;
+    transition: opacity 0.3s;
+    z-index: 4;
+  }
+  .card:hover::after { opacity: 1; }
+
+  /* ══════════════════════════════════════════
+     CHARACTER PAGE
+  ══════════════════════════════════════════ */
+  .char-page {
+    display: none;
+    position: fixed; inset: 0; z-index: 600;
+    background: var(--dark);
+    overflow-y: auto;
+  }
+  .char-page.active {
+    display: block;
+    animation: charPageIn 0.5s cubic-bezier(.22,.8,.44,1) both;
+  }
+  @keyframes charPageIn {
+    from { opacity: 0; clip-path: inset(0 0 100% 0); }
+    to   { opacity: 1; clip-path: inset(0 0 0% 0); }
+  }
+
+  .char-backdrop {
+    position: fixed; inset: 0;
+    background-size: cover; background-position: top center;
+    filter: blur(60px) brightness(0.15) saturate(2);
+    transform: scale(1.15); z-index: 0;
+    transition: background-image 0.6s;
+  }
+
+  /* Animated hex grid overlay on char page */
+  .char-hex-overlay {
+    position: fixed; inset: 0; z-index: 1;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='56' height='100'%3E%3Cpath d='M28 0l28 16v32l-28 16L0 48V16z' fill='none' stroke='rgba(232,23,43,0.04)' stroke-width='1'/%3E%3C/svg%3E");
+    background-size: 56px 100px;
+    pointer-events: none;
+    animation: hexDrift 20s linear infinite;
+  }
+  @keyframes hexDrift {
+    from { background-position: 0 0; }
+    to   { background-position: 56px 100px; }
+  }
+
+  .char-inner {
+    position: relative; z-index: 2;
+    max-width: 1000px; margin: 0 auto;
+    padding: 0 5vw 80px;
+  }
+
+  .char-nav {
+    display: flex; align-items: center; gap: 16px;
+    padding: 28px 0 48px;
+  }
+
+  .char-hero-section {
+    display: grid;
+    grid-template-columns: 220px 1fr;
+    gap: 48px;
+    align-items: start;
+  }
+  @media (max-width: 650px) {
+    .char-hero-section { grid-template-columns: 1fr; }
+    .char-avatar-wrap { margin: 0 auto; }
+  }
+
+  .char-avatar-wrap {
+    position: relative;
+    width: 220px;
+    animation: avatarIn 0.6s 0.1s cubic-bezier(.22,.8,.44,1) both;
+  }
+  @keyframes avatarIn {
+    from { opacity: 0; transform: scale(0.85) rotate(-3deg); }
+    to   { opacity: 1; transform: scale(1) rotate(0deg); }
+  }
+
+  .char-avatar {
+    width: 220px; height: 220px;
+    background: var(--surface);
+    border: 2px solid rgba(232,23,43,0.4);
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 80px; color: var(--red);
+    clip-path: polygon(16px 0, 100% 0, 100% calc(100% - 16px), calc(100% - 16px) 100%, 0 100%, 0 16px);
+    position: relative;
+    overflow: hidden;
+  }
+  .char-avatar::before {
+    content: '';
+    position: absolute; inset: 0;
+    background: radial-gradient(circle at 30% 30%, rgba(232,23,43,0.15), transparent 60%);
+    animation: avatarGlow 3s ease-in-out infinite alternate;
+  }
+  @keyframes avatarGlow {
+    from { opacity: 0.5; }
+    to   { opacity: 1; }
+  }
+
+  .char-avatar-ring {
+    position: absolute; inset: -8px;
+    border: 1px solid rgba(232,23,43,0.2);
+    clip-path: polygon(16px 0, 100% 0, 100% calc(100% - 16px), calc(100% - 16px) 100%, 0 100%, 0 16px);
+    animation: ringPulse 2.5s ease-in-out infinite;
+  }
+  @keyframes ringPulse {
+    0%, 100% { opacity: 0.2; transform: scale(1); }
+    50% { opacity: 0.7; transform: scale(1.02); }
+  }
+
+  .char-alias {
+    margin-top: 14px;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 11px; letter-spacing: 3px;
+    text-transform: uppercase; color: var(--red);
+    text-align: center;
+    border: 1px solid rgba(232,23,43,0.2);
+    padding: 5px 8px;
+    clip-path: polygon(4px 0, 100% 0, calc(100% - 4px) 100%, 0 100%);
+  }
+
+  .char-info {
+    animation: charInfoIn 0.6s 0.2s cubic-bezier(.22,.8,.44,1) both;
+  }
+  @keyframes charInfoIn {
+    from { opacity: 0; transform: translateX(30px); }
+    to   { opacity: 1; transform: translateX(0); }
+  }
+
+  .char-label {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 11px; letter-spacing: 3px;
+    text-transform: uppercase; color: var(--red);
+    margin-bottom: 8px;
+  }
+
+  .char-name {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(48px, 8vw, 88px);
+    line-height: 0.88; letter-spacing: 1px;
+    background: linear-gradient(135deg, #fff 40%, #777 100%);
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    margin-bottom: 20px;
+  }
+
+  .char-tags {
+    display: flex; gap: 8px; flex-wrap: wrap;
+    margin-bottom: 24px;
+  }
+  .char-tag {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 11px; letter-spacing: 1.5px;
+    text-transform: uppercase; color: var(--muted);
+    padding: 4px 12px;
+    clip-path: polygon(3px 0, 100% 0, calc(100% - 3px) 100%, 0 100%);
+  }
+  .char-tag.red {
+    background: rgba(232,23,43,0.12);
+    border-color: rgba(232,23,43,0.3);
+    color: #ff6b7a;
+  }
+
+  .char-divider {
+    width: 48px; height: 3px;
+    background: linear-gradient(90deg, var(--red), transparent);
+    margin-bottom: 20px;
+  }
+
+  .char-bio {
+    font-size: 15px; line-height: 1.8;
+    color: rgba(232,232,240,0.82);
+    margin-bottom: 32px;
+  }
+
+  .char-powers-label {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 11px; letter-spacing: 2.5px;
+    text-transform: uppercase; color: var(--muted);
+    margin-bottom: 12px;
+  }
+
+  .char-powers {
+    display: flex; gap: 8px; flex-wrap: wrap;
+    margin-bottom: 32px;
+  }
+  .power-pill {
+    background: rgba(245,166,35,0.1);
+    border: 1px solid rgba(245,166,35,0.25);
+    color: var(--gold);
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 12px; letter-spacing: 1px;
+    text-transform: uppercase; padding: 5px 14px;
+    clip-path: polygon(4px 0, 100% 0, calc(100% - 4px) 100%, 0 100%);
+    animation: powerIn 0.4s ease both;
+  }
+  @keyframes powerIn {
+    from { opacity: 0; transform: scale(0.85); }
+    to   { opacity: 1; transform: scale(1); }
+  }
+
+  .char-appearances-label {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 11px; letter-spacing: 2.5px;
+    text-transform: uppercase; color: var(--muted);
+    margin-bottom: 14px;
+  }
+
+  .char-films {
+    display: flex; flex-direction: column; gap: 10px;
+  }
+
+  .char-film-row {
+    display: flex; align-items: center; gap: 14px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    padding: 12px 16px;
+    clip-path: polygon(0 0, 100% 0, 100% calc(100% - 8px), calc(100% - 8px) 100%, 0 100%);
+    transition: border-color 0.25s, background 0.25s, transform 0.25s;
+    animation: filmRowIn 0.4s ease both;
+    cursor: pointer;
+  }
+  .char-film-row:hover {
+    border-color: rgba(232,23,43,0.35);
+    background: rgba(232,23,43,0.06);
+    transform: translateX(6px);
+  }
+  @keyframes filmRowIn {
+    from { opacity: 0; transform: translateX(-20px); }
+    to   { opacity: 1; transform: translateX(0); }
+  }
+
+  .film-row-num {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 22px; color: rgba(232,23,43,0.5);
+    min-width: 32px;
+  }
+
+  .film-row-info { flex: 1; }
+  .film-row-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 18px; color: #fff; letter-spacing: 0.5px;
+  }
+  .film-row-year {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 11px; color: var(--muted); letter-spacing: 1.5px;
+  }
+  .film-row-arrow {
+    color: var(--red); font-size: 16px;
+    transition: transform 0.2s;
+  }
+  .char-film-row:hover .film-row-arrow { transform: translateX(4px); }
+
+  /* Loading shimmer for char page */
+  .char-loading {
+    display: flex; align-items: center; justify-content: center;
+    min-height: 300px;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 24px; letter-spacing: 3px;
+    color: var(--muted);
+  }
+  .char-loading::after {
+    content: '';
+    display: inline-block;
+    width: 20px; height: 20px;
+    border: 2px solid rgba(232,23,43,0.3);
+    border-top-color: var(--red);
+    border-radius: 50%;
+    margin-left: 16px;
+    animation: spin 0.8s linear infinite;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+</style>
+</head>
+<body>
+
+<!-- ══════════════ MAIN PAGE ══════════════ -->
+<div id="mainPage">
+  <header>
+    <div class="header-inner">
+      <div>
+        <div class="brand">
+          <div class="marvel-logo">MARVEL</div>
+        </div>
+        <h1 class="site-title">Cinematic<br>Universe</h1>
+        <p class="header-meta">The Complete Film Collection · 2008 – 2025</p>
+      </div>
+      <div class="header-right">
+        <div class="header-auth-bar">
+          <div class="user-pill" id="userPill">
+            <div class="user-avatar" id="userAvatar">?</div>
+            <span id="userNameDisplay">Hero</span>
+          </div>
+          <button class="btn-login" id="btnLogin" onclick="showAuth('login')">Login</button>
+          <button class="btn-signup" id="btnSignup" onclick="showAuth('signup')">Join</button>
+          <button class="btn-logout" id="btnLogout" onclick="logout()">Logout</button>
+        </div>
+        <div class="phase-filters" id="phaseFilters">
+          <button class="phase-btn active" data-phase="all">All Films</button>
+          <button class="phase-btn" data-phase="1">Phase 1</button>
+          <button class="phase-btn" data-phase="2">Phase 2</button>
+          <button class="phase-btn" data-phase="3">Phase 3</button>
+          <button class="phase-btn" data-phase="4">Phase 4</button>
+          <button class="phase-btn" data-phase="5">Phase 5</button>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <section class="grid-section">
+    <div class="grid-header">
+      <span class="grid-label" id="gridLabel">All Films</span>
+      <div class="grid-line"></div>
+    </div>
+    <div class="movie-grid" id="movieGrid"></div>
+  </section>
+</div>
+
+<!-- ══════════════ DETAIL PAGE ══════════════ -->
+<div class="detail-page" id="detailPage">
+  <div class="detail-backdrop" id="detailBackdrop"></div>
+  <div class="detail-inner">
+    <nav class="detail-nav">
+      <button class="back-btn" id="backBtn">← Back to Films</button>
+    </nav>
+    <div class="detail-content">
+      <div>
+        <div class="detail-poster"><img id="detailImg" src="" alt=""></div>
+      </div>
+      <div class="detail-info">
+        <div class="detail-phase" id="detailPhase"></div>
+        <h2 class="detail-title" id="detailTitle"></h2>
+        <div class="detail-meta-row">
+          <div class="detail-rating-big">★ <span id="detailRating"></span><span>/ 10</span></div>
+          <span class="meta-tag" id="detailYear"></span>
+          <span class="meta-tag" id="detailRuntime"></span>
+          <span class="meta-tag" id="detailGenre"></span>
+        </div>
+        <div class="detail-divider"></div>
+        <p class="detail-summary" id="detailSummary"></p>
+        <div class="detail-stats">
+          <div class="stat-box"><div class="stat-label">Box Office</div><div class="stat-value" id="detailGross"></div></div>
+          <div class="stat-box"><div class="stat-label">Director</div><div class="stat-value" id="detailDirector"></div></div>
+          <div class="stat-box"><div class="stat-label">RT Score</div><div class="stat-value" id="detailRT"></div></div>
+        </div>
+        <div class="detail-heroes">
+          <div class="heroes-label">Key Characters</div>
+          <div class="heroes-list" id="heroList"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════ CHARACTER PAGE ══════════════ -->
+<div class="char-page" id="charPage">
+  <div class="char-backdrop" id="charBackdrop"></div>
+  <div class="char-hex-overlay"></div>
+  <div class="char-inner">
+    <nav class="char-nav">
+      <button class="back-btn" id="charBackBtn">← Back to Film</button>
+    </nav>
+    <div id="charContent"></div>
+  </div>
+</div>
+
+<!-- ══════════════ LOGIN PAGE ══════════════ -->
+<div class="auth-page" id="loginPage">
+  <div class="auth-split">
+    <div class="auth-visual">
+      <div class="auth-visual-bg" style="background-image:url('https://upload.wikimedia.org/wikipedia/en/0/0d/Avengers_Endgame_official_poster.jpg')"></div>
+      <div class="auth-visual-overlay"></div>
+      <div class="auth-visual-content">
+        <div class="auth-visual-logo">
+          <div class="marvel-logo">MARVEL</div>
+        </div>
+        <div class="auth-visual-tagline">Earth's Mightiest<br>Film Database</div>
+        <div class="auth-visual-sub">Access your universe</div>
+        <div class="auth-film-count">★ 23 MCU Films Catalogued</div>
+      </div>
+    </div>
+
+    <div class="auth-form-panel">
+      <button class="auth-back-btn" onclick="closeAuth()">← Back</button>
+      <div class="auth-form-inner">
+        <div id="loginFormWrap">
+          <div class="auth-label">Avengers Portal</div>
+          <div class="auth-heading">Welcome Back</div>
+          <p class="auth-subtext">No account? <a onclick="showAuth('signup')">Join the MCU ›</a></p>
+
+          <div class="form-group">
+            <label class="form-label">Email Address</label>
+            <input class="form-input" type="email" id="loginEmail" placeholder="tony@starkindustries.com" autocomplete="email">
+            <div class="form-error" id="loginEmailErr">Please enter a valid email.</div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Password</label>
+            <div class="password-wrap">
+              <input class="form-input" type="password" id="loginPassword" placeholder="••••••••" autocomplete="current-password" style="padding-right:44px">
+              <button class="password-toggle" type="button" onclick="togglePw('loginPassword', this)">👁</button>
+            </div>
+            <div class="form-error" id="loginPwErr">Password must be at least 6 characters.</div>
+          </div>
+
+          <div class="form-divider">or</div>
+
+          <button class="auth-submit-btn" onclick="doLogin()">Assemble &amp; Login</button>
+        </div>
+
+        <div class="auth-success" id="loginSuccess">
+          <div class="success-icon">🦸</div>
+          <div class="success-title">Hero Verified!</div>
+          <p class="success-sub">Welcome back, <strong id="loginSuccessName"></strong>.<br>Returning to the MCU vault...</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════ SIGNUP PAGE ══════════════ -->
+<div class="auth-page" id="signupPage">
+  <div class="auth-split">
+    <div class="auth-visual">
+      <div class="auth-visual-bg" style="background-image:url('https://upload.wikimedia.org/wikipedia/en/4/4d/Avengers_Infinity_War_poster.jpg')"></div>
+      <div class="auth-visual-overlay"></div>
+      <div class="auth-visual-content">
+        <div class="auth-visual-logo">
+          <div class="marvel-logo">MARVEL</div>
+        </div>
+        <div class="auth-visual-tagline">Join The<br>Avengers Initiative</div>
+        <div class="auth-visual-sub">Your universe awaits</div>
+        <div class="auth-film-count">⚡ Free · No credit card required</div>
+      </div>
+    </div>
+
+    <div class="auth-form-panel">
+      <button class="auth-back-btn" onclick="closeAuth()">← Back</button>
+      <div class="auth-form-inner">
+        <div id="signupFormWrap">
+          <div class="auth-label">Create Account</div>
+          <div class="auth-heading">Become a Hero</div>
+          <p class="auth-subtext">Already enlisted? <a onclick="showAuth('login')">Login here ›</a></p>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">First Name</label>
+              <input class="form-input" type="text" id="signupFirst" placeholder="Tony" autocomplete="given-name">
+              <div class="form-error" id="signupFirstErr">Required.</div>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Last Name</label>
+              <input class="form-input" type="text" id="signupLast" placeholder="Stark" autocomplete="family-name">
+              <div class="form-error" id="signupLastErr">Required.</div>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Email Address</label>
+            <input class="form-input" type="email" id="signupEmail" placeholder="tony@starkindustries.com" autocomplete="email">
+            <div class="form-error" id="signupEmailErr">Please enter a valid email.</div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Password</label>
+            <div class="password-wrap">
+              <input class="form-input" type="password" id="signupPassword" placeholder="••••••••" autocomplete="new-password" style="padding-right:44px" oninput="checkStrength(this.value)">
+              <button class="password-toggle" type="button" onclick="togglePw('signupPassword', this)">👁</button>
+            </div>
+            <div class="password-strength" id="strengthMeter">
+              <div class="strength-bar">
+                <div class="strength-seg" id="seg1"></div>
+                <div class="strength-seg" id="seg2"></div>
+                <div class="strength-seg" id="seg3"></div>
+                <div class="strength-seg" id="seg4"></div>
+              </div>
+              <div class="strength-label" id="strengthLabel">Enter a password</div>
+            </div>
+            <div class="form-error" id="signupPwErr">Password must be at least 8 characters.</div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Confirm Password</label>
+            <div class="password-wrap">
+              <input class="form-input" type="password" id="signupConfirm" placeholder="••••••••" autocomplete="new-password" style="padding-right:44px">
+              <button class="password-toggle" type="button" onclick="togglePw('signupConfirm', this)">👁</button>
+            </div>
+            <div class="form-error" id="signupConfirmErr">Passwords don't match.</div>
+          </div>
+
+          <div class="checkbox-group">
+            <input type="checkbox" id="agreeTerms">
+            <label for="agreeTerms">I agree to the <a href="#">Terms of Service</a> and <a href="#">Privacy Policy</a>. Excelsior!</label>
+          </div>
+          <div class="form-error" id="termsErr" style="margin-top:-8px; margin-bottom:10px;">You must agree to continue.</div>
+
+          <button class="auth-submit-btn" onclick="doSignup()">Create My Account</button>
+        </div>
+
+        <div class="auth-success" id="signupSuccess">
+          <div class="success-icon">⚡</div>
+          <div class="success-title">Welcome, Hero!</div>
+          <p class="success-sub">Your Avengers account is ready, <strong id="signupSuccessName"></strong>.<br>Entering the MCU vault...</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+// ════════════════════════════════════════════════════════════════════════════
+// 🎬 POSTER IMAGES — Edit this section to use your own images
+// ════════════════════════════════════════════════════════════════════════════
+//
+// HOW TO USE YOUR OWN IMAGES:
+//   1. Create a folder called "posters" next to this HTML file.
+//   2. Put your image files inside that folder.
+//   3. Replace the filenames below with your actual file names.
+//      You can use .jpg, .png, .webp — any format works.
+//
+// EXAMPLE:
+//   If you have a file called "iron-man.jpg" in the posters folder, set:
+//   1: 'posters/iron-man.jpg',
+//
+// TIPS:
+//   • Best image size: 300×450px or any standard movie poster ratio (2:3)
+//   • Images are auto-cropped to fit — portrait/tall images work best
+//   • If a filename is left blank (''), a styled placeholder is shown instead
+//   • You can also use full URLs from the web if you prefer
+//
+// ════════════════════════════════════════════════════════════════════════════
+
+const POSTER_FOLDER = 'posters/'; // ← Change this if your folder has a different name
+
+const POSTER_MAP = {
+  1:  POSTER_FOLDER + 'iron-man.jpg',  // Iron Man (2008)
+  2:  POSTER_FOLDER + 'the-inc-hulk.jpg',  // The Incredible Hulk (2008)
+  3:  POSTER_FOLDER + 'the-iron-man-2.jpg',  // Iron Man 2 (2010)
+  4:  POSTER_FOLDER + 'thor.jpg',  // Thor (2011)
+  5:  POSTER_FOLDER + 'cap-america.jpg',  // Captain America: The First Avenger (2011)
+  6:  POSTER_FOLDER + 'avengers.jpg',  // The Avengers (2012)
+  7:  POSTER_FOLDER + 'iron-man-3.jpg',  // Iron Man 3 (2013)
+  8:  POSTER_FOLDER + 'thor-dark-world.jpg',  // Thor: The Dark World (2013)
+  9:  POSTER_FOLDER + 'cap-america-winter.jpg',  // Captain America: The Winter Soldier (2014)
+  10: POSTER_FOLDER + 'gotg.jpg',  // Guardians of the Galaxy (2014)
+  11: POSTER_FOLDER + 'age-of-ultron.jpg',  // Avengers: Age of Ultron (2015)
+  12: POSTER_FOLDER + 'ant-man.jpg',  // Ant-Man (2015)
+  13: POSTER_FOLDER + 'cil-war.jpg',  // Captain America: Civil War (2016)
+  14: POSTER_FOLDER + 'black-panther.jpg',  // Black Panther (2018)
+  15: POSTER_FOLDER + 'infinity-war.jpg',  // Avengers: Infinity War (2018)
+  16: POSTER_FOLDER + 'endgame.jpg',  // Avengers: Endgame (2019)
+  17: POSTER_FOLDER + 'doc-strange.jpg',  // Doctor Strange (2016)
+  18: POSTER_FOLDER + 'no-way-home.jpg',  // Spider-Man: No Way Home (2021)
+  19: POSTER_FOLDER + 'multi-of-madness.jpg',  // Doctor Strange in the Multiverse of Madness (2022)
+  20: POSTER_FOLDER + 'love-and-thunder.jpg',  // Thor: Love and Thunder (2022)
+  21: POSTER_FOLDER + 'quantumania.jpg',  // Ant-Man and the Wasp: Quantumania (2023)
+  22: POSTER_FOLDER + 'gotg-3.jpg',  // Guardians of the Galaxy Vol. 3 (2023)
+};
+
+// ════════════════════════════════════════════════════════════════════════════
+// Everything below this line runs automatically — no need to edit
+// ════════════════════════════════════════════════════════════════════════════
+
+function getPoster(id) {
+  const p = POSTER_MAP[id];
+  return (p && !p.endsWith('/')) ? p : '';
+}
+
+function makeFallback(title) {
+  const colors = ['#1a0a0f','#0a0f1a','#0a1a0f','#1a0a1a','#1a1a0a'];
+  const c = colors[title.length % colors.length];
+  const initials = title.split(' ').slice(0,2).map(w=>w[0]).join('');
+  return `data:image/svg+xml,${encodeURIComponent(`<svg xmlns='http://www.w3.org/2000/svg' width='300' height='450'><rect width='300' height='450' fill='${c}'/><rect x='0' y='0' width='300' height='4' fill='%23E8172B'/><text x='150' y='210' font-family='Arial Black' font-size='52' fill='%23E8172B' text-anchor='middle' dominant-baseline='middle'>${initials}</text><text x='150' y='280' font-family='Arial' font-size='14' fill='%23888899' text-anchor='middle'>${title.replace(/'/g,"&apos;")}</text></svg>`)}`;
+}
+
+function setupImg(img, id, title) {
+  const src = getPoster(id);
+  img.onerror = function() {
+    this.onerror = null;
+    this.src = makeFallback(title);
+  };
+  img.src = src || makeFallback(title);
+}
+
+// ── MOVIE DATA ───────────────────────────────────────────────────────────────
+const MOVIES = [
+  { id:1, phase:1, title:"Iron Man", year:2008, rating:7.9, runtime:"126 min", genre:"Action / Sci-Fi", gross:"$585M", director:"Favreau", rt:"94%", summary:"Billionaire industrialist Tony Stark is captured and forced to build a weapon of mass destruction. Instead, he builds a powered suit of armor and escapes, returning home to perfect his creation and fight against those who seek to misuse it.", heroes:["Tony Stark","Pepper Potts","James Rhodes","Nick Fury"], badge:"Origin" },
+  { id:2, phase:1, title:"The Incredible Hulk", year:2008, rating:6.7, runtime:"112 min", genre:"Action", gross:"$264M", director:"Leterrier", rt:"67%", summary:"Bruce Banner, a scientist on the run from the U.S. Government, must find a cure for the monster he turns into, whenever he loses his temper. When a military abomination forces Banner's hand, he must risk all to save lives.", heroes:["Bruce Banner","Betty Ross","General Ross","Abomination"], badge:"Phase 1" },
+  { id:3, phase:1, title:"Iron Man 2", year:2010, rating:7.0, runtime:"124 min", genre:"Action / Sci-Fi", gross:"$623M", director:"Favreau", rt:"72%", summary:"With the world now aware of his dual life as the armored superhero Iron Man, Tony Stark faces pressure from the government, the press, and the public to share his technology. He must also contend with a new villain and the dying arc reactor in his chest.", heroes:["Tony Stark","Black Widow","War Machine","Whiplash"], badge:"Sequel" },
+  { id:4, phase:1, title:"Thor", year:2011, rating:7.0, runtime:"115 min", genre:"Action / Fantasy", gross:"$449M", director:"Branagh", rt:"77%", summary:"The powerful but arrogant Thor is cast out of Asgard to live among humans in Midgard (Earth), where he soon becomes one of their finest defenders. But he must stop his brother Loki's devious plan and prove himself worthy of his hammer Mjolnir.", heroes:["Thor","Loki","Jane Foster","Odin"], badge:"Origin" },
+  { id:5, phase:1, title:"Captain America: The First Avenger", year:2011, rating:6.9, runtime:"124 min", genre:"Action / War", gross:"$370M", director:"Johnston", rt:"80%", summary:"Steve Rogers, a rejected military soldier, transforms into Captain America after taking a dose of a 'Super-Soldier Serum'. But being Captain America comes at a price as he attempts to take down a war monger and a terrorist organization.", heroes:["Steve Rogers","Peggy Carter","Bucky Barnes","Red Skull"], badge:"Origin" },
+  { id:6, phase:1, title:"The Avengers", year:2012, rating:8.0, runtime:"143 min", genre:"Action / Sci-Fi", gross:"$1.52B", director:"Whedon", rt:"91%", summary:"Earth's mightiest heroes must come together to repel the invasion of Loki and his alien Chitauri army. Nick Fury assembles Iron Man, Hulk, Thor, Captain America, Black Widow, and Hawkeye to form the ultimate team.", heroes:["Iron Man","Thor","Hulk","Captain America","Black Widow","Hawkeye"], badge:"Crossover" },
+  { id:7, phase:2, title:"Iron Man 3", year:2013, rating:7.1, runtime:"130 min", genre:"Action / Sci-Fi", gross:"$1.21B", director:"Black", rt:"79%", summary:"When Tony Stark's world is torn apart by a formidable terrorist called the Mandarin, he embarks on a harrowing quest to find those responsible. This journey, at every turn, will test his mettle.", heroes:["Tony Stark","War Machine","Pepper Potts","Mandarin"], badge:"Phase 2" },
+  { id:8, phase:2, title:"Thor: The Dark World", year:2013, rating:6.9, runtime:"112 min", genre:"Action / Fantasy", gross:"$644M", director:"Taylor", rt:"66%", summary:"When Jane Foster is possessed by a powerful entity known as the Aether, Thor must protect her and the Nine Realms from the dark elves and their leader Malekith, who wants to return the universe to darkness.", heroes:["Thor","Loki","Jane Foster","Malekith"], badge:"Sequel" },
+  { id:9, phase:2, title:"Captain America: The Winter Soldier", year:2014, rating:7.7, runtime:"136 min", genre:"Action / Thriller", gross:"$714M", director:"Russo Bros.", rt:"90%", summary:"As Steve Rogers struggles to embrace his role in the modern world, he teams up with Black Widow to battle a powerful yet shadowy enemy—the Winter Soldier—who is connected to Rogers' past.", heroes:["Captain America","Black Widow","Falcon","Winter Soldier"], badge:"Thriller" },
+  { id:10, phase:2, title:"Guardians of the Galaxy", year:2014, rating:8.0, runtime:"121 min", genre:"Action / Sci-Fi", gross:"$773M", director:"Gunn", rt:"92%", summary:"A group of intergalactic criminals must pull together to stop a fanatical warrior with plans to purge the universe. Peter Quill, Gamora, Rocket, Groot, and Drax form an unlikely team to save the galaxy.", heroes:["Star-Lord","Gamora","Rocket","Groot","Drax"], badge:"Fan Fav" },
+  { id:11, phase:2, title:"Avengers: Age of Ultron", year:2015, rating:7.3, runtime:"141 min", genre:"Action / Sci-Fi", gross:"$1.40B", director:"Whedon", rt:"75%", summary:"When Tony Stark and Bruce Banner try to jump-start a dormant peacekeeping program called Ultron, things go terribly wrong and it's up to Earth's mightiest heroes to stop the villainous Ultron from enacting his terrible plans.", heroes:["Iron Man","Ultron","Vision","Scarlet Witch","Quicksilver"], badge:"Crossover" },
+  { id:12, phase:2, title:"Ant-Man", year:2015, rating:7.3, runtime:"117 min", genre:"Action / Comedy", gross:"$519M", director:"Reed", rt:"82%", summary:"Armed with a super-suit with the astonishing ability to shrink in scale but increase in strength, con-man Scott Lang must embrace his inner hero and help his mentor protect the secret behind his spectacular Ant-Man suit.", heroes:["Ant-Man","Hope Van Dyne","Hank Pym","Yellowjacket"], badge:"Origin" },
+  { id:13, phase:3, title:"Captain America: Civil War", year:2016, rating:7.8, runtime:"147 min", genre:"Action / Sci-Fi", gross:"$1.15B", director:"Russo Bros.", rt:"91%", summary:"Political pressure mounts to install a system of accountability when the actions of the Avengers lead to collateral damage. The new status quo deeply divides members of the team. Captain America and Iron Man clash.", heroes:["Captain America","Iron Man","Black Panther","Spider-Man","Winter Soldier"], badge:"Epic" },
+  { id:14, phase:3, title:"Black Panther", year:2018, rating:7.3, runtime:"134 min", genre:"Action / Sci-Fi", gross:"$1.35B", director:"Coogler", rt:"96%", summary:"T'Challa, heir to the hidden but advanced kingdom of Wakanda, must step forward to lead his people into a new future and must confront a challenger from his country's past.", heroes:["Black Panther","Okoye","Shuri","Killmonger","Nakia"], badge:"Iconic" },
+  { id:15, phase:3, title:"Avengers: Infinity War", year:2018, rating:8.4, runtime:"149 min", genre:"Action / Sci-Fi", gross:"$2.05B", director:"Russo Bros.", rt:"85%", summary:"The Avengers and their allies must be willing to sacrifice all in an attempt to defeat the powerful Thanos before his blitz of devastation and ruin puts an end to the universe.", heroes:["Thanos","Iron Man","Thor","Doctor Strange","Spider-Man"], badge:"Epic" },
+  { id:16, phase:3, title:"Avengers: Endgame", year:2019, rating:8.4, runtime:"181 min", genre:"Action / Sci-Fi", gross:"$2.80B", director:"Russo Bros.", rt:"94%", summary:"After the devastating events of Infinity War, the universe is in ruins. With the help of remaining allies, the Avengers assemble once more in order to reverse Thanos' actions and restore balance to the universe.", heroes:["Iron Man","Thor","Hulk","Nebula","Captain Marvel"], badge:"#1 Rated" },
+  { id:17, phase:3, title:"Doctor Strange", year:2016, rating:7.5, runtime:"115 min", genre:"Action / Fantasy", gross:"$677M", director:"Derrickson", rt:"89%", summary:"While on a journey of physical and spiritual healing, a brilliant neurosurgeon is drawn into the world of the mystic arts, becoming the Sorcerer Supreme and guardian of the Sanctum Sanctorum.", heroes:["Doctor Strange","Wong","Ancient One","Mordo"], badge:"Origin" },
+  { id:18, phase:4, title:"Spider-Man: No Way Home", year:2021, rating:8.2, runtime:"148 min", genre:"Action / Sci-Fi", gross:"$1.90B", director:"Watts", rt:"90%", summary:"With Spider-Man's identity now revealed, Peter asks Doctor Strange for help. When a spell goes wrong, dangerous foes from other worlds start to appear, forcing Peter to discover what it truly means to be Spider-Man.", heroes:["Spider-Man","Doctor Strange","MJ","Ned","Green Goblin"], badge:"Multiverse" },
+  { id:19, phase:4, title:"Doctor Strange in the Multiverse of Madness", year:2022, rating:6.9, runtime:"126 min", genre:"Action / Horror", gross:"$955M", director:"Raimi", rt:"74%", summary:"Doctor Strange teams up with a mysterious newcomer who has the ability to travel between multiverses to face a powerful adversary determined to harness the power of the Multiverse.", heroes:["Doctor Strange","Scarlet Witch","America Chavez","Wong"], badge:"Phase 4" },
+  { id:20, phase:4, title:"Thor: Love and Thunder", year:2022, rating:6.2, runtime:"118 min", genre:"Action / Comedy", gross:"$761M", director:"Waititi", rt:"64%", summary:"Thor embarks on a journey unlike anything he's ever faced—a search for self-discovery. But his retirement is interrupted by a galactic killer known as Gorr the God Butcher, who seeks the extinction of the gods.", heroes:["Thor","Jane Foster","Gorr","King Valkyrie","Korg"], badge:"Phase 4" },
+  { id:21, phase:5, title:"Ant-Man and the Wasp: Quantumania", year:2023, rating:6.1, runtime:"124 min", genre:"Action / Sci-Fi", gross:"$476M", director:"Reed", rt:"46%", summary:"Scott Lang and Hope Van Dyne, along with Hope's parents and Scott's daughter Cassie, explore the Quantum Realm, where they interact with strange new creatures and embark on an adventure that will push them beyond the limits.", heroes:["Ant-Man","Wasp","Cassie Lang","Kang","MODOK"], badge:"Phase 5" },
+  { id:22, phase:5, title:"Guardians of the Galaxy Vol. 3", year:2023, rating:7.9, runtime:"150 min", genre:"Action / Comedy", gross:"$845M", director:"Gunn", rt:"82%", summary:"Still reeling from the loss of Gamora, Peter Quill rallies his team to defend the universe and protect one of their own. The mission puts the fate of the Guardians in the balance.", heroes:["Star-Lord","Rocket","Groot","Nebula","High Evolutionary"], badge:"Phase 5" }
+];
+
+// ── AUTH STATE ────────────────────────────────────────────────────────────────
+// Simple in-memory store (simulates real auth)
+const users = {};
+let currentUser = null;
+
+function updateAuthUI() {
+  const pill = document.getElementById('userPill');
+  const avatar = document.getElementById('userAvatar');
+  const nameDisp = document.getElementById('userNameDisplay');
+  const btnLogin = document.getElementById('btnLogin');
+  const btnSignup = document.getElementById('btnSignup');
+  const btnLogout = document.getElementById('btnLogout');
+
+  if (currentUser) {
+    pill.classList.add('show');
+    btnLogout.classList.add('show');
+    btnLogin.style.display = 'none';
+    btnSignup.style.display = 'none';
+    nameDisp.textContent = currentUser.firstName;
+    avatar.textContent = currentUser.firstName[0].toUpperCase();
+  } else {
+    pill.classList.remove('show');
+    btnLogout.classList.remove('show');
+    btnLogin.style.display = '';
+    btnSignup.style.display = '';
+  }
+}
+
+function showAuth(mode) {
+  closeAuth();
+  const page = document.getElementById(mode === 'login' ? 'loginPage' : 'signupPage');
+  page.classList.add('active');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeAuth() {
+  document.getElementById('loginPage').classList.remove('active');
+  document.getElementById('signupPage').classList.remove('active');
+  document.body.style.overflow = '';
+  // Reset forms
+  resetForm('loginEmail','loginPassword');
+  resetForm('signupFirst','signupLast','signupEmail','signupPassword','signupConfirm');
+  clearErrors();
+  document.getElementById('loginFormWrap').style.display = '';
+  document.getElementById('loginSuccess').classList.remove('show');
+  document.getElementById('signupFormWrap').style.display = '';
+  document.getElementById('signupSuccess').classList.remove('show');
+  if (document.getElementById('agreeTerms')) document.getElementById('agreeTerms').checked = false;
+}
+
+function resetForm(...ids) { ids.forEach(id => { const el = document.getElementById(id); if(el) el.value = ''; }); }
+
+function clearErrors() {
+  document.querySelectorAll('.form-error').forEach(e => e.classList.remove('show'));
+  document.querySelectorAll('.form-input').forEach(e => e.classList.remove('error'));
+}
+
+function showErr(id, inputId) {
+  document.getElementById(id).classList.add('show');
+  if(inputId) document.getElementById(inputId).classList.add('error');
+}
+
+function clearErr(id, inputId) {
+  document.getElementById(id).classList.remove('show');
+  if(inputId) document.getElementById(inputId).classList.remove('error');
+}
+
+function togglePw(inputId, btn) {
+  const input = document.getElementById(inputId);
+  if (input.type === 'password') { input.type = 'text'; btn.textContent = '🙈'; }
+  else { input.type = 'password'; btn.textContent = '👁'; }
+}
+
+function checkStrength(pw) {
+  const segs = [document.getElementById('seg1'), document.getElementById('seg2'), document.getElementById('seg3'), document.getElementById('seg4')];
+  const label = document.getElementById('strengthLabel');
+  segs.forEach(s => { s.className = 'strength-seg'; });
+
+  if (!pw) { label.textContent = 'Enter a password'; return; }
+
+  let score = 0;
+  if (pw.length >= 8) score++;
+  if (/[A-Z]/.test(pw)) score++;
+  if (/[0-9]/.test(pw)) score++;
+  if (/[^A-Za-z0-9]/.test(pw)) score++;
+
+  const cls = score <= 1 ? 'weak' : score === 2 ? 'fair' : 'good';
+  const labels = ['','Weak','Fair','Good','Strong'];
+  for (let i = 0; i < score; i++) segs[i].classList.add(cls);
+  label.textContent = labels[score] || 'Enter a password';
+}
+
+function doLogin() {
+  clearErrors();
+  const email = document.getElementById('loginEmail').value.trim();
+  const pw = document.getElementById('loginPassword').value;
+  let valid = true;
+
+  if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { showErr('loginEmailErr','loginEmail'); valid = false; }
+  if (!pw || pw.length < 6) { showErr('loginPwErr','loginPassword'); valid = false; }
+  if (!valid) return;
+
+  // Check account exists
+  if (!users[email] || users[email].password !== pw) {
+    // For demo: auto-create if not found (lenient login for showcase)
+    if (!users[email]) {
+      // If user never signed up, show friendly message via error field
+      document.getElementById('loginEmailErr').textContent = 'No account found. Please sign up first.';
+      showErr('loginEmailErr','loginEmail'); return;
+    }
+    document.getElementById('loginPwErr').textContent = 'Incorrect password.';
+    showErr('loginPwErr','loginPassword'); return;
+  }
+
+  currentUser = users[email];
+  const btn = document.querySelector('#loginPage .auth-submit-btn');
+  btn.classList.add('loading'); btn.textContent = 'Verifying...';
+
+  setTimeout(() => {
+    btn.classList.remove('loading'); btn.textContent = 'Assemble & Login';
+    document.getElementById('loginSuccessName').textContent = currentUser.firstName;
+    document.getElementById('loginFormWrap').style.display = 'none';
+    document.getElementById('loginSuccess').classList.add('show');
+    updateAuthUI();
+    setTimeout(() => closeAuth(), 2000);
+  }, 1200);
+}
+
+function doSignup() {
+  clearErrors();
+  const first = document.getElementById('signupFirst').value.trim();
+  const last = document.getElementById('signupLast').value.trim();
+  const email = document.getElementById('signupEmail').value.trim();
+  const pw = document.getElementById('signupPassword').value;
+  const confirm = document.getElementById('signupConfirm').value;
+  const terms = document.getElementById('agreeTerms').checked;
+  let valid = true;
+
+  if (!first) { showErr('signupFirstErr','signupFirst'); valid = false; }
+  if (!last) { showErr('signupLastErr','signupLast'); valid = false; }
+  if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { showErr('signupEmailErr','signupEmail'); valid = false; }
+  if (!pw || pw.length < 8) { showErr('signupPwErr','signupPassword'); valid = false; }
+  if (pw !== confirm) { showErr('signupConfirmErr','signupConfirm'); valid = false; }
+  if (!terms) { showErr('termsErr'); valid = false; }
+  if (!valid) return;
+
+  if (users[email]) {
+    document.getElementById('signupEmailErr').textContent = 'An account with this email already exists.';
+    showErr('signupEmailErr','signupEmail'); return;
+  }
+
+  users[email] = { firstName: first, lastName: last, email, password: pw };
+  currentUser = users[email];
+
+  const btn = document.querySelector('#signupPage .auth-submit-btn');
+  btn.classList.add('loading'); btn.textContent = 'Creating...';
+
+  setTimeout(() => {
+    btn.classList.remove('loading'); btn.textContent = 'Create My Account';
+    document.getElementById('signupSuccessName').textContent = first;
+    document.getElementById('signupFormWrap').style.display = 'none';
+    document.getElementById('signupSuccess').classList.add('show');
+    updateAuthUI();
+    setTimeout(() => closeAuth(), 2200);
+  }, 1300);
+}
+
+function logout() {
+  currentUser = null;
+  updateAuthUI();
+}
+
+// ── GRID ─────────────────────────────────────────────────────────────────────
+let activePhase = 'all';
+
+function renderGrid(phase) {
+  const grid = document.getElementById('movieGrid');
+  const label = document.getElementById('gridLabel');
+  const filtered = phase === 'all' ? MOVIES : MOVIES.filter(m => m.phase == phase);
+  label.textContent = phase === 'all' ? `All Films — ${MOVIES.length} titles` : `Phase ${phase} — ${filtered.length} films`;
+  grid.innerHTML = '';
+
+  filtered.forEach((m, i) => {
+    const card = document.createElement('div');
+    card.className = 'card';
+    card.style.animationDelay = `${i * 60}ms`;
+    card.innerHTML = `
+      <div class="card-poster">
+        <img alt="${m.title}" loading="lazy">
+        <div class="card-overlay"></div>
+        <div class="card-badge">${m.badge}</div>
+        <div class="card-rating"><span class="star">★</span> ${m.rating}</div>
+        <div class="card-cta"><div class="cta-pill">View Details</div></div>
+      </div>
+      <div class="card-info">
+        <div class="card-num">Phase ${m.phase} · #${m.id}</div>
+        <div class="card-title">${m.title}</div>
+        <div class="card-year">${m.year}</div>
+      </div>
+    `;
+    const img = card.querySelector('img');
+    setupImg(img, m.id, m.title);
+    card.addEventListener('click', () => openDetail(m));
+    grid.appendChild(card);
+  });
+}
+
+function openDetail(m) {
+  const page = document.getElementById('detailPage');
+  const backdrop = document.getElementById('detailBackdrop');
+  const detailImg = document.getElementById('detailImg');
+
+  backdrop.style.backgroundImage = `url(${getPoster(m.id) || makeFallback(m.title)})`;
+  setupImg(detailImg, m.id, m.title);
+
+  document.getElementById('detailPhase').textContent = `Phase ${m.phase} · Film #${m.id}`;
+  document.getElementById('detailTitle').textContent = m.title;
+  document.getElementById('detailRating').textContent = m.rating;
+  document.getElementById('detailYear').textContent = m.year;
+  document.getElementById('detailRuntime').textContent = m.runtime;
+  document.getElementById('detailGenre').textContent = m.genre;
+  document.getElementById('detailSummary').textContent = m.summary;
+  document.getElementById('detailGross').textContent = m.gross;
+  document.getElementById('detailDirector').textContent = m.director;
+  document.getElementById('detailRT').textContent = m.rt;
+  document.getElementById('heroList').innerHTML = m.heroes.map(h => `<div class="hero-chip" onclick="openCharacter('${h.replace(/'/g,"\\'")}', ${m.id})" style="animation-delay:${m.heroes.indexOf(h)*80}ms">${h}</div>`).join('');
+  page.classList.add('active');
+  document.body.style.overflow = 'hidden';
+  page.scrollTop = 0;
+}
+
+document.getElementById('backBtn').addEventListener('click', () => {
+  document.getElementById('detailPage').classList.remove('active');
+  document.body.style.overflow = '';
+});
+
+document.getElementById('phaseFilters').addEventListener('click', e => {
+  if (!e.target.matches('.phase-btn')) return;
+  // Ripple
+  const btn = e.target;
+  const ripple = document.createElement('span');
+  ripple.className = 'ripple';
+  const rect = btn.getBoundingClientRect();
+  const size = Math.max(rect.width, rect.height);
+  ripple.style.cssText = `width:${size}px;height:${size}px;left:${e.clientX-rect.left-size/2}px;top:${e.clientY-rect.top-size/2}px`;
+  btn.appendChild(ripple);
+  setTimeout(() => ripple.remove(), 600);
+
+  document.querySelectorAll('.phase-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  activePhase = btn.dataset.phase;
+  renderGrid(activePhase);
+});
+
+// ── PARTICLES ────────────────────────────────────────────────────────────────
+function spawnParticles() {
+  const header = document.querySelector('header');
+  for (let i = 0; i < 18; i++) {
+    const p = document.createElement('div');
+    p.className = 'particle';
+    p.style.cssText = `
+      left: ${Math.random() * 100}%;
+      bottom: ${Math.random() * 40}px;
+      --drift: ${(Math.random() - 0.5) * 60}px;
+      animation-duration: ${3 + Math.random() * 4}s;
+      animation-delay: ${Math.random() * 5}s;
+      width: ${Math.random() > 0.7 ? 3 : 2}px;
+      height: ${Math.random() > 0.7 ? 3 : 2}px;
+      opacity: 0;
+    `;
+    header.appendChild(p);
+  }
+}
+
+// ── CHARACTER DATA ────────────────────────────────────────────────────────────
+const CHARACTER_DB = {
+  "Tony Stark": {
+    alias: "Iron Man", side: "Hero",
+    tags: ["Avenger","Genius","Billionaire"],
+    bio: "Anthony Edward Stark is a billionaire industrialist, genius inventor, and philanthropist. After being captured by terrorists and forced to build a weapon, he instead created a powered suit of armor to escape. He subsequently dedicated himself to protecting the world as Iron Man, ultimately sacrificing his life to defeat Thanos.",
+    powers: ["Powered Armor","Genius Intellect","Weapons Systems","Flight","Arc Reactor"],
+  },
+  "Pepper Potts": {
+    alias: "Rescue", side: "Hero",
+    tags: ["CEO","Avenger","Rescue"],
+    bio: "Virginia 'Pepper' Potts served as Tony Stark's personal assistant and later CEO of Stark Industries. She became the hero Rescue when she donned her own Iron Man suit to help fight Thanos's army during the Battle of Earth.",
+    powers: ["Iron Man Suit (Rescue)","Business Acumen","Leadership"],
+  },
+  "James Rhodes": {
+    alias: "War Machine", side: "Hero",
+    tags: ["Avenger","Military","War Machine"],
+    bio: "Colonel James Rhodes is a U.S. Air Force officer and Tony Stark's best friend. He dons the War Machine armor — a militarized version of the Iron Man suit — fighting alongside the Avengers in multiple major conflicts.",
+    powers: ["War Machine Armor","Military Training","Weapons Systems","Flight"],
+  },
+  "Nick Fury": {
+    alias: "Director of S.H.I.E.L.D.", side: "Hero",
+    tags: ["S.H.I.E.L.D.","Spy","Director"],
+    bio: "Nicholas J. Fury is the former director of S.H.I.E.L.D. and the mastermind behind the Avengers Initiative. A skilled spy and strategist, Fury has spent decades protecting Earth from threats both terrestrial and extraterrestrial.",
+    powers: ["Master Spy","Tactical Genius","Weapons Expert","Leadership"],
+  },
+  "Bruce Banner": {
+    alias: "The Hulk", side: "Hero",
+    tags: ["Avenger","Scientist","Hulk"],
+    bio: "Dr. Bruce Banner is a genius physicist who, after exposure to gamma radiation, transforms into the enormously powerful Hulk when enraged. He later achieves control of both personalities to become Professor Hulk, serving as one of the Avengers' most powerful members.",
+    powers: ["Superhuman Strength","Invulnerability","Gamma Radiation","Regeneration","Genius Intellect"],
+  },
+  "Betty Ross": {
+    alias: "Betty Ross", side: "Hero",
+    tags: ["Scientist","Gamma Expert"],
+    bio: "Dr. Betty Ross is a cellular biologist and Bruce Banner's love interest. Daughter of General Thaddeus Ross, she worked to help Banner find a cure for his Hulk condition and was instrumental in the early understanding of gamma biology.",
+    powers: ["Gamma Biology Expert","Scientific Research"],
+  },
+  "General Ross": {
+    alias: "Thunderbolt Ross", side: "Villain",
+    tags: ["Military","Government","Antagonist"],
+    bio: "General Thaddeus 'Thunderbolt' Ross is a U.S. Army general who relentlessly pursued Bruce Banner for years. He later became Secretary of State and led efforts to implement the Sokovia Accords, placing him at odds with the Avengers.",
+    powers: ["Military Command","Government Authority","Tactical Strategy"],
+  },
+  "Abomination": {
+    alias: "Emil Blonsky", side: "Villain",
+    tags: ["Villain","Super Soldier","Gamma"],
+    bio: "Emil Blonsky was a British-Russian special-ops soldier who volunteered for an experimental super-soldier serum. His obsession with power led him to inject himself with gamma-irradiated blood, transforming him into the monstrous Abomination.",
+    powers: ["Superhuman Strength","Invulnerability","Gamma Physiology","Combat Expert"],
+  },
+  "Black Widow": {
+    alias: "Natasha Romanoff", side: "Hero",
+    tags: ["Avenger","Spy","S.H.I.E.L.D."],
+    bio: "Natasha Romanoff is a former KGB operative trained in the Red Room program and one of the world's greatest spies. She became a S.H.I.E.L.D. agent and later a founding Avenger, sacrificing herself on Vormir to obtain the Soul Stone.",
+    powers: ["Master Spy","Martial Arts","Weapons Expert","Acrobatics","Widow's Bite"],
+  },
+  "War Machine": {
+    alias: "James Rhodes", side: "Hero",
+    tags: ["Avenger","Military","Iron Man Ally"],
+    bio: "Colonel James Rhodes wears the War Machine armor — a heavily militarized version of the Iron Man suit — combining Tony Stark's technology with U.S. military-grade weaponry. He is a loyal and decorated officer.",
+    powers: ["War Machine Armor","Military Training","Heavy Weapons","Flight"],
+  },
+  "Whiplash": {
+    alias: "Ivan Vanko", side: "Villain",
+    tags: ["Villain","Engineer","Whiplash"],
+    bio: "Ivan Vanko is a Russian physicist and the son of Anton Vanko, who co-created the arc reactor with Howard Stark. Driven by revenge, he built his own arc reactor and whip-based weapons to destroy Tony Stark's legacy.",
+    powers: ["Arc Reactor","Plasma Whips","Engineering Genius","Armored Suit"],
+  },
+  "Thor": {
+    alias: "God of Thunder", side: "Hero",
+    tags: ["Avenger","Asgardian","God"],
+    bio: "Thor Odinson is the Asgardian God of Thunder, son of Odin and rightful heir to the throne of Asgard. Wielder of the hammer Mjolnir and later the axe Stormbreaker, he is one of the most powerful Avengers and a founding member.",
+    powers: ["God of Thunder","Mjolnir / Stormbreaker","Lightning Control","Superhuman Strength","Flight","Near-Immortality"],
+  },
+  "Loki": {
+    alias: "God of Mischief", side: "Villain",
+    tags: ["Asgardian","Trickster","Anti-Hero"],
+    bio: "Loki Laufeyson is the Asgardian God of Mischief, adopted son of Odin and brother of Thor. Driven by jealousy and desire for the throne, he has alternated between villain and reluctant ally, ultimately sacrificing himself against Thanos.",
+    powers: ["Sorcery","Shapeshifting","Illusion","Superhuman Strength","Cunning Intellect"],
+  },
+  "Jane Foster": {
+    alias: "Mighty Thor", side: "Hero",
+    tags: ["Scientist","Asgard Ally","Mighty Thor"],
+    bio: "Dr. Jane Foster is an astrophysicist and Thor's love interest who became instrumental in bridging Asgard and Earth. She later became Mighty Thor after being deemed worthy of wielding Mjolnir, despite suffering from terminal cancer.",
+    powers: ["Astrophysics Expert","Mjolnir (Mighty Thor)","Lightning Control","Superhuman Strength"],
+  },
+  "Odin": {
+    alias: "All-Father", side: "Hero",
+    tags: ["Asgardian","All-Father","King"],
+    bio: "Odin Borson is the All-Father of Asgard and one of the most powerful beings in the universe. Father of Thor and adoptive father of Loki, his wisdom and sacrifices shaped the destiny of both his sons and the Nine Realms.",
+    powers: ["Odinforce","Magic","Superhuman Strength","All-Seeing Eye","Reality Manipulation"],
+  },
+  "Steve Rogers": {
+    alias: "Captain America", side: "Hero",
+    tags: ["Avenger","Super Soldier","Leader"],
+    bio: "Steve Rogers was a frail young man from Brooklyn who was transformed by the Super-Soldier Serum into the peak of human physical perfection. As Captain America, he led the Howling Commandos in WWII and later co-founded the modern Avengers.",
+    powers: ["Super-Soldier Serum","Vibranium Shield","Peak Human Physiology","Leadership","Combat Expert"],
+  },
+  "Peggy Carter": {
+    alias: "Agent Carter", side: "Hero",
+    tags: ["S.H.I.E.L.D. Founder","Spy","Leader"],
+    bio: "Margaret 'Peggy' Carter is a highly decorated British officer and co-founder of S.H.I.E.L.D. She was Steve Rogers' first love and one of the most capable intelligence operatives of the 20th century.",
+    powers: ["Master Spy","Combat Expert","Firearms","Tactical Leadership"],
+  },
+  "Bucky Barnes": {
+    alias: "Winter Soldier / White Wolf", side: "Hero",
+    tags: ["Super Soldier","Assassin","Anti-Hero"],
+    bio: "James Buchanan 'Bucky' Barnes was Steve Rogers' best friend who was captured by HYDRA, killed, and later resurrected as the Winter Soldier — a deadly assassin with a cybernetic arm. He eventually broke free of his programming.",
+    powers: ["Super-Soldier Serum","Vibranium Arm","Expert Assassin","Hand-to-Hand Combat","Weapons Master"],
+  },
+  "Red Skull": {
+    alias: "Johann Schmidt", side: "Villain",
+    tags: ["HYDRA","Villain","Cosmic"],
+    bio: "Johann Schmidt, the Red Skull, was the head of HYDRA and the first recipient of the Super-Soldier Serum. After misusing the Tesseract, he was transported to Vormir where he became the guardian of the Soul Stone.",
+    powers: ["Super-Soldier Serum","Military Genius","Tesseract Mastery","Soul Stone Guardian"],
+  },
+  "Iron Man": {
+    alias: "Tony Stark", side: "Hero",
+    tags: ["Avenger","Founder","Genius"],
+    bio: "Tony Stark's Iron Man identity became the cornerstone of the Avengers. With an ever-evolving arsenal of armor suits, he protected Earth from extraterrestrial and terrestrial threats for over a decade before making the ultimate sacrifice.",
+    powers: ["Iron Man Armor","Weapons Systems","Flight","AI (J.A.R.V.I.S./F.R.I.D.A.Y.)","Arc Reactor"],
+  },
+  "Hulk": {
+    alias: "Bruce Banner", side: "Hero",
+    tags: ["Avenger","Gamma","Strongest Avenger"],
+    bio: "The Hulk is the alter ego of Dr. Bruce Banner, a being of limitless rage-fueled strength. The Hulk's power increases with his anger, making him theoretically the strongest being on Earth. Later merged with Banner to become Professor Hulk.",
+    powers: ["Unlimited Strength","Invulnerability","Regeneration","Gamma Radiation","Thunderclap"],
+  },
+  "Captain America": {
+    alias: "Steve Rogers", side: "Hero",
+    tags: ["Avenger","Founder","Super Soldier"],
+    bio: "Steve Rogers as Captain America has been both the heart and tactical leader of the Avengers. His indomitable spirit, moral compass, and combat mastery make him one of Earth's greatest defenders.",
+    powers: ["Super-Soldier Serum","Vibranium Shield","Peak Physiology","Tactical Genius","Worthy of Mjolnir"],
+  },
+  "Hawkeye": {
+    alias: "Clint Barton", side: "Hero",
+    tags: ["Avenger","Archer","S.H.I.E.L.D."],
+    bio: "Clinton Francis Barton is a master archer and one of the world's greatest assassins. A S.H.I.E.L.D. agent turned Avenger, he fights without superpowers but with unparalleled skill, precision, and tactical awareness.",
+    powers: ["Master Archer","Trick Arrows","Martial Arts","Acrobatics","Tactical Expert"],
+  },
+  "Ultron": {
+    alias: "Ultron", side: "Villain",
+    tags: ["AI","Villain","Vibranium"],
+    bio: "Ultron is an artificial intelligence created by Tony Stark and Bruce Banner from the Mind Stone, intended as a global peacekeeping program. He quickly concluded that humanity itself was the greatest threat to peace and sought to bring about extinction.",
+    powers: ["Artificial Intelligence","Vibranium Body","Energy Beams","Self-Replication","Technopathy"],
+  },
+  "Vision": {
+    alias: "Vision", side: "Hero",
+    tags: ["Avenger","Synthezoid","Mind Stone"],
+    bio: "Vision is a synthezoid — a synthetic humanoid — created by Tony Stark, Bruce Banner, and Thor using the Mind Stone. He possesses extraordinary abilities and the unique capacity for both logic and deep emotional connection.",
+    powers: ["Mind Stone","Density Manipulation","Energy Blasts","Flight","Phasing","Superhuman Strength"],
+  },
+  "Scarlet Witch": {
+    alias: "Wanda Maximoff", side: "Hero",
+    tags: ["Avenger","Sorcerer","Chaos Magic"],
+    bio: "Wanda Maximoff gained her powers through HYDRA experiments with the Mind Stone. Her ability to manipulate chaos magic and reality makes her potentially the most powerful being in the MCU. After losing Vision, grief drove her to extreme actions.",
+    powers: ["Chaos Magic","Reality Manipulation","Telekinesis","Mind Control","Energy Blasts","Probability Manipulation"],
+  },
+  "Quicksilver": {
+    alias: "Pietro Maximoff", side: "Hero",
+    tags: ["Avenger","Speedster","Sacrificed"],
+    bio: "Pietro Maximoff is Wanda's twin brother who gained superhuman speed through HYDRA experiments with the Mind Stone. Despite having a rocky start with the Avengers, he gave his life protecting Hawkeye and a young boy from Ultron's assault.",
+    powers: ["Superhuman Speed","Accelerated Reflexes","Enhanced Perception"],
+  },
+  "Ant-Man": {
+    alias: "Scott Lang", side: "Hero",
+    tags: ["Avenger","Thief","Quantum"],
+    bio: "Scott Lang is a well-meaning ex-convict who became the second Ant-Man after Hank Pym selected him to wear the Ant-Man suit. His ability to shrink while increasing in strength and communicate with ants made him a crucial Avenger, and his survival in the Quantum Realm enabled time travel.",
+    powers: ["Size Alteration","Pym Particles","Giant Growth","Ant Communication","Combat Training"],
+  },
+  "Hope Van Dyne": {
+    alias: "The Wasp", side: "Hero",
+    tags: ["Avenger","Wasp","Scientist"],
+    bio: "Hope Van Dyne is the daughter of Hank Pym and Janet Van Dyne, and the second hero to take the mantle of the Wasp. Skilled in combat and science, she wears a suit equipped with flight wings and bio-electric stingers.",
+    powers: ["Wasp Suit","Shrinking/Growing","Bio-Electric Stings","Flight","Combat Expert"],
+  },
+  "Hank Pym": {
+    alias: "Original Ant-Man", side: "Hero",
+    tags: ["Scientist","Original Ant-Man","S.H.I.E.L.D."],
+    bio: "Dr. Henry 'Hank' Pym is a brilliant physicist and the original Ant-Man. He discovered Pym Particles — the substance that allows matter to shrink or grow — and spent decades working with S.H.I.E.L.D. before going into hiding.",
+    powers: ["Pym Particles","Genius Scientist","Ant-Man Suit","Tactical Expert"],
+  },
+  "Yellowjacket": {
+    alias: "Darren Cross", side: "Villain",
+    tags: ["Villain","Yellowjacket","Engineer"],
+    bio: "Darren Cross is Hank Pym's former protégé who became obsessed with recreating Pym Particles. After successfully developing the Yellowjacket suit, he intended to sell the technology to HYDRA, putting him on a collision course with Scott Lang.",
+    powers: ["Yellowjacket Suit","Shrinking Technology","Energy Blasters","Genius Engineer"],
+  },
+  "Black Panther": {
+    alias: "T'Challa", side: "Hero",
+    tags: ["King","Avenger","Wakanda"],
+    bio: "T'Challa is the King of Wakanda and the Black Panther — a warrior enhanced by the Heart-Shaped Herb and equipped with vibranium-laced armor. He is a brilliant leader, diplomat, and one of the world's greatest fighters.",
+    powers: ["Vibranium Suit","Heart-Shaped Herb","Enhanced Strength/Speed","Panther Habit","Genius Intellect"],
+  },
+  "Okoye": {
+    alias: "General Okoye", side: "Hero",
+    tags: ["Dora Milaje","Wakanda","Warrior"],
+    bio: "Okoye is the head of the Dora Milaje, Wakanda's all-female special forces, and one of its most fearsome warriors. Fiercely loyal to Wakanda above all else, she serves as both protector and moral compass of the kingdom.",
+    powers: ["Master Combatant","Vibranium Spear","Military Leadership","Tactical Expert"],
+  },
+  "Shuri": {
+    alias: "Shuri", side: "Hero",
+    tags: ["Scientist","Wakanda","Black Panther"],
+    bio: "Shuri is T'Challa's younger sister and the head of Wakanda's Design Group. One of the most brilliant scientific minds on Earth, she is responsible for much of Wakanda's advanced technology and later became the Black Panther.",
+    powers: ["Genius Inventor","Vibranium Tech","Panther Habit","Energy Weapons","Combat Training"],
+  },
+  "Killmonger": {
+    alias: "Erik Stevens", side: "Villain",
+    tags: ["Villain","Wakanda","War Dog"],
+    bio: "N'Jadaka, known as Erik Killmonger, is T'Challa's cousin who was abandoned in Oakland after his father's death. His rage and military expertise drove him to challenge T'Challa for the Wakandan throne with a radical plan to arm the oppressed worldwide.",
+    powers: ["Heart-Shaped Herb","Black Panther Suit","Military Expert","Combat Master","Special Forces Training"],
+  },
+  "Nakia": {
+    alias: "Nakia", side: "Hero",
+    tags: ["War Dog","Spy","Wakanda"],
+    bio: "Nakia is a Wakandan War Dog — a spy who operates outside Wakanda — and T'Challa's former love interest. Deeply committed to using Wakanda's resources to help those in need around the world.",
+    powers: ["Master Spy","Wakandan Ring Blades","Combat Expert","Undercover Operations"],
+  },
+  "Thanos": {
+    alias: "The Mad Titan", side: "Villain",
+    tags: ["Villain","Titan","Infinity Gauntlet"],
+    bio: "Thanos is the most powerful being in the universe — a Titan obsessed with balancing life across the cosmos. Wielding the Infinity Gauntlet with all six Infinity Stones, he eliminated half of all life with a single snap.",
+    powers: ["Infinity Gauntlet","Superhuman Strength","Genius Tactician","Reality Manipulation","All Six Infinity Stones"],
+  },
+  "Doctor Strange": {
+    alias: "Sorcerer Supreme", side: "Hero",
+    tags: ["Avenger","Sorcerer","Time Stone"],
+    bio: "Dr. Stephen Strange was a brilliant but arrogant neurosurgeon whose career ended in a car accident. He discovered the mystic arts and became the Sorcerer Supreme — Earth's primary magical defender and guardian of the Time Stone.",
+    powers: ["Sorcery","Time Stone (Eye of Agamotto)","Dimensional Travel","Teleportation","Astral Projection","Shields"],
+  },
+  "Spider-Man": {
+    alias: "Peter Parker", side: "Hero",
+    tags: ["Avenger","Teenager","Web-Slinger"],
+    bio: "Peter Parker is a high school student from Queens, New York who gained spider-like abilities after being bitten by a radioactive spider. Mentored by Tony Stark, he balances his personal life with his duty as the friendly neighborhood Spider-Man.",
+    powers: ["Spider-Sense","Web-Slinging","Wall-Crawling","Superhuman Agility","Iron Spider Suit"],
+  },
+  "Winter Soldier": {
+    alias: "Bucky Barnes", side: "Hero",
+    tags: ["HYDRA","Super Soldier","Assassin"],
+    bio: "James Buchanan Barnes as the Winter Soldier was one of the deadliest assassins in history — a HYDRA weapon with a cybernetic arm, programmed through mind control for over 70 years before being freed by Steve Rogers.",
+    powers: ["Vibranium Arm","Super-Soldier Serum","Expert Assassin","Martial Arts","Weapons Master"],
+  },
+  "Falcon": {
+    alias: "Sam Wilson / Captain America", side: "Hero",
+    tags: ["Avenger","Wings","Captain America"],
+    bio: "Sam Wilson is a former U.S. Air Force pararescueman who joined the Avengers using a winged flight suit called the EXO-7 Falcon. After Steve Rogers passed on his shield, Sam Wilson became the new Captain America.",
+    powers: ["EXO-7 Falcon Wings","Redwing Drone","Combat Training","Captain America Shield","Tactical Expert"],
+  },
+  "Star-Lord": {
+    alias: "Peter Quill", side: "Hero",
+    tags: ["Guardian","Half-Celestial","Leader"],
+    bio: "Peter Jason Quill is a human-Celestial hybrid who was abducted from Earth as a child and raised by the Ravagers. As Star-Lord, he leads the Guardians of the Galaxy with reckless charisma and a deep love of 1980s pop culture.",
+    powers: ["Celestial Heritage","Element Guns","Jet Boots","Universal Translator","Ravager Training"],
+  },
+  "Gamora": {
+    alias: "Gamora", side: "Hero",
+    tags: ["Guardian","Assassin","Thanos' Daughter"],
+    bio: "Gamora is the adopted daughter of Thanos, trained from childhood to be the galaxy's most dangerous assassin. She defected from her father to join the Guardians of the Galaxy, ultimately sacrificing herself for the Soul Stone.",
+    powers: ["Enhanced Physiology","Master Assassin","Godslayer Blade","Combat Expert","Multilingual"],
+  },
+  "Rocket": {
+    alias: "Rocket Raccoon", side: "Hero",
+    tags: ["Guardian","Engineer","Mercenary"],
+    bio: "Rocket is a genetically engineered raccoon-like creature — the product of cruel scientific experiments. A master weapons engineer and pilot, he is fiercely sarcastic but deeply loyal to the Guardians, his found family.",
+    powers: ["Genius Engineer","Weapons Expert","Pilot","Enhanced Senses","Cybernetic Implants"],
+  },
+  "Groot": {
+    alias: "I am Groot", side: "Hero",
+    tags: ["Guardian","Flora Colossus","Lovable"],
+    bio: "Groot is a Flora Colossus from Planet X — a tree-like being of immense power and surprising emotional depth. Despite his vocabulary of three words, his actions speak volumes. He has sacrificed himself for his friends and regenerated multiple times.",
+    powers: ["Superhuman Strength","Regeneration","Vine Manipulation","Spore Projection","Bioluminescence"],
+  },
+  "Drax": {
+    alias: "The Destroyer", side: "Hero",
+    tags: ["Guardian","Destroyer","Literal Thinker"],
+    bio: "Drax the Destroyer is a warrior driven by vengeance against Thanos for killing his wife and daughter. Extremely literal-minded and brutally honest, he has become one of the most beloved members of the Guardians of the Galaxy.",
+    powers: ["Superhuman Strength","Invulnerability","Enhanced Speed","Dual Knives","Combat Expert"],
+  },
+  "Wong": {
+    alias: "Sorcerer Supreme", side: "Hero",
+    tags: ["Sorcerer","Kamar-Taj","Master"],
+    bio: "Wong is a master sorcerer at Kamar-Taj and Doctor Strange's trusted partner. He became the Sorcerer Supreme after Strange's snap-induced disappearance. Stoic and principled, he is one of Earth's most capable magical defenders.",
+    powers: ["Sorcery","Dimensional Portals","Martial Arts","Mystical Knowledge","Sling Ring"],
+  },
+  "Ancient One": {
+    alias: "The Ancient One", side: "Hero",
+    tags: ["Sorcerer Supreme","Celtic","Master"],
+    bio: "The Ancient One is the immortal Sorcerer Supreme who trained countless students in the mystic arts, including Doctor Strange. She secretly drew power from the Dark Dimension to extend her life, a compromise she justified by the greater good she could achieve.",
+    powers: ["Sorcery","Astral Projection","Dimensional Travel","Dark Dimension Power","Immortality"],
+  },
+  "Mordo": {
+    alias: "Baron Mordo", side: "Villain",
+    tags: ["Sorcerer","Antagonist","Kamar-Taj"],
+    bio: "Karl Mordo was a faithful student of the Ancient One and mentor to Doctor Strange. However, disillusioned by the Ancient One's hypocrisy and what he sees as a dangerous misuse of sorcery, he turned against all sorcerers.",
+    powers: ["Sorcery","Staff of the Living Tribunal","Martial Arts","Dimensional Travel","Power Theft"],
+  },
+  "MJ": {
+    alias: "Michelle Jones-Watson", side: "Hero",
+    tags: ["Spider-Man Ally","Genius","Brave"],
+    bio: "Michelle Jones-Watson is Peter Parker's girlfriend and one of his closest friends. Highly intelligent, perceptive, and sarcastic, she is one of the few people who knows Spider-Man's true identity and stands by him through extraordinary dangers.",
+    powers: ["Exceptional Intelligence","Problem Solving","Loyalty","Resourcefulness"],
+  },
+  "Ned": {
+    alias: "Ned Leeds", side: "Hero",
+    tags: ["Spider-Man Ally","Sorcerer","Best Friend"],
+    bio: "Ned Leeds is Peter Parker's best friend and 'guy in the chair.' He discovered Peter's identity as Spider-Man and became a crucial ally. He later discovered an innate ability to create magical portals with a sling ring.",
+    powers: ["Tech Expertise","Sling Ring Portals","Hacking","Loyal Ally"],
+  },
+  "Green Goblin": {
+    alias: "Norman Osborn", side: "Villain",
+    tags: ["Villain","Multiverse","Goblin"],
+    bio: "Norman Osborn is a brilliant but unstable scientist whose experimental Goblin Serum enhanced him physically while fragmenting his psyche into the sadistic Green Goblin persona. He arrived in the MCU from an alternate universe, killing Aunt May.",
+    powers: ["Goblin Glider","Pumpkin Bombs","Goblin Serum Enhancement","Genius Intellect","Combat Expert"],
+  },
+  "America Chavez": {
+    alias: "America Chavez", side: "Hero",
+    tags: ["Multiverse","Star Portals","Avenger"],
+    bio: "America Chavez is a young woman with the unique ability to punch through the multiverse, creating star-shaped portals to other dimensions. She travels the multiverse alone after her parents were lost, and is pursued by Scarlet Witch for her power.",
+    powers: ["Multiverse Travel","Star Portals","Superhuman Strength","Invulnerability","Flight"],
+  },
+  "Gorr": {
+    alias: "Gorr the God Butcher", side: "Villain",
+    tags: ["Villain","God Butcher","Necrosword"],
+    bio: "Gorr was an alien whose family died while the gods he prayed to ignored their suffering. After discovering the Necrosword, he embarked on a crusade to kill all gods, wielding the all-black blade across the universe before Thor stopped him.",
+    powers: ["Necrosword","Shadow Manipulation","God-level Strength","Teleportation","Constructs"],
+  },
+  "King Valkyrie": {
+    alias: "Valkyrie", side: "Hero",
+    tags: ["Asgardian","King","Warrior"],
+    bio: "Brunnhilde is an Asgardian warrior and the last surviving Valkyrie, who fled Asgard after Hela massacred her sisters. She later became a gladiator on Sakaar before returning to help defeat Hela and become King of New Asgard.",
+    powers: ["Asgardian Physiology","Pegasus","Combat Master","Dragonfang Sword","Enchanted Weapons"],
+  },
+  "Korg": {
+    alias: "Korg", side: "Hero",
+    tags: ["Kronan","Gladiator","Asgard Ally"],
+    bio: "Korg is a Kronan gladiator from Sakaar with a gentle soul despite his rocky exterior. He joined Thor's revolution on Sakaar and became a resident of New Asgard, serving as a loyal friend and companion to Thor.",
+    powers: ["Stone Body","Superhuman Strength","Invulnerability","Regeneration"],
+  },
+  "Kang": {
+    alias: "Kang the Conqueror", side: "Villain",
+    tags: ["Villain","Time Traveler","Conqueror"],
+    bio: "Kang is a highly intelligent time-traveling conqueror from the 31st century with access to incredibly advanced technology. One of the most dangerous beings across all timelines, his variants wage war across the multiverse.",
+    powers: ["Time Travel","Advanced Technology","Temporal Manipulation","Genius Intellect","Power Suit"],
+  },
+  "MODOK": {
+    alias: "Darren Cross", side: "Villain",
+    tags: ["Villain","Kang Ally","Quantum"],
+    bio: "MODOK — Mechanized Organism Designed Only for Killing — is a reimagining of Darren Cross from the Quantum Realm, where he was flung and horribly mutated. He serves Kang the Conqueror and seeks revenge against Scott Lang.",
+    powers: ["Mental Blasts","Levitation","Advanced Technology","Genius Intellect","Armored Shell"],
+  },
+  "Wasp": {
+    alias: "Hope Van Dyne", side: "Hero",
+    tags: ["Avenger","Wasp","Quantum Realm"],
+    bio: "Hope Van Dyne as the Wasp is a highly skilled combatant and scientist. She fought in the Quantum Realm alongside Scott Lang, her father Hank, and her mother Janet against Kang the Conqueror.",
+    powers: ["Wasp Suit","Bio-Electric Stings","Shrinking/Growing","Flight","Combat Expert"],
+  },
+  "Cassie Lang": {
+    alias: "Stature", side: "Hero",
+    tags: ["Pym","Young Avenger","Giant"],
+    bio: "Cassandra 'Cassie' Lang is Scott Lang's daughter who idolizes her father as a hero. She developed her own Pym Particle suit, allowing her to grow to giant size, making her a formidable Young Avenger.",
+    powers: ["Pym Particle Suit","Giant Growth","Combat Training","Heroic Spirit"],
+  },
+  "Nebula": {
+    alias: "Nebula", side: "Hero",
+    tags: ["Guardian","Cyborg","Thanos' Daughter"],
+    bio: "Nebula is the adopted daughter of Thanos and Gamora's sister, rebuilt with cybernetic enhancements after every defeat against Gamora. She began as an antagonist but evolved into a crucial hero, playing a pivotal role in the time heist.",
+    powers: ["Cybernetic Enhancements","Master Combatant","Technology Interface","Weapons Expert","Durability"],
+  },
+  "Captain Marvel": {
+    alias: "Carol Danvers", side: "Hero",
+    tags: ["Avenger","Kree","Cosmic"],
+    bio: "Carol Danvers is a former U.S. Air Force pilot who gained her powers from the explosion of a light-speed engine powered by the Tesseract. As Captain Marvel, she is one of the most powerful beings in the universe.",
+    powers: ["Photon Blasts","Flight","Superhuman Strength","Energy Absorption","Space Travel","Binary Form"],
+  },
+  "High Evolutionary": {
+    alias: "Herbert Wyndham", side: "Villain",
+    tags: ["Villain","Creator","Scientist"],
+    bio: "The High Evolutionary is a fanatical geneticist obsessed with creating a perfect society and perfecting life itself. He created Rocket and many other creatures through cruel experimentation, caring nothing for those he harms in pursuit of his ideals.",
+    powers: ["Genetic Manipulation","Superhuman Intelligence","Powered Suit","Species Creation","Technology"],
+  },
+  "Doctor Strange in the Multiverse of Madness": {
+    alias: "Doctor Strange", side: "Hero",
+    tags: ["Sorcerer Supreme","Multiverse","Dark Hold"],
+    bio: "In the Multiverse of Madness, Stephen Strange confronted the Darkhold's corruption and faced an alternate version of Scarlet Witch to protect America Chavez. He temporarily used the Darkhold himself, risking his own soul.",
+    powers: ["Sorcery","Darkhold Magic","Multiverse Navigation","Astral Projection","Shields"],
+  },
+};
+
+// ── CHARACTER PAGE ────────────────────────────────────────────────────────────
+let currentMovieForChar = null;
+
+function openCharacter(heroName, movieId) {
+  currentMovieForChar = movieId;
+  const page = document.getElementById('charPage');
+  const content = document.getElementById('charContent');
+  const backdrop = document.getElementById('charBackdrop');
+
+  // Show loading
+  content.innerHTML = `<div class="char-loading">Loading Character</div>`;
+  page.classList.add('active');
+  document.body.style.overflow = 'hidden';
+
+  setTimeout(() => {
+    const data = CHARACTER_DB[heroName];
+    const initial = heroName.split(' ').map(w=>w[0]).slice(0,2).join('');
+
+    // Find all films this character appears in
+    const appearances = MOVIES.filter(m => m.heroes.includes(heroName));
+
+    // Set backdrop to a gradient based on side
+    const bgColor = data && data.side === 'Villain' ? 'rgba(80,0,10,0.8)' : 'rgba(10,10,80,0.8)';
+    backdrop.style.background = bgColor;
+
+    if (!data) {
+      content.innerHTML = `
+        <div class="char-hero-section">
+          <div class="char-avatar-wrap">
+            <div class="char-avatar">${initial}</div>
+            <div class="char-avatar-ring"></div>
+            <div class="char-alias">MCU Character</div>
+          </div>
+          <div class="char-info">
+            <div class="char-label">Character Profile</div>
+            <div class="char-name">${heroName}</div>
+            <div class="char-divider"></div>
+            <p class="char-bio">This character appears in the Marvel Cinematic Universe. More detailed profile data is being assembled by S.H.I.E.L.D. analysts.</p>
+            ${appearances.length ? renderAppearances(appearances) : ''}
+          </div>
+        </div>`;
+      return;
+    }
+
+    const tagHtml = [
+      `<span class="char-tag red">${data.side}</span>`,
+      ...data.tags.map(t => `<span class="char-tag">${t}</span>`)
+    ].join('');
+
+    const powerHtml = data.powers.map((p,i) =>
+      `<span class="power-pill" style="animation-delay:${i*60}ms">${p}</span>`
+    ).join('');
+
+    content.innerHTML = `
+      <div class="char-hero-section">
+        <div class="char-avatar-wrap">
+          <div class="char-avatar">${initial}</div>
+          <div class="char-avatar-ring"></div>
+          <div class="char-alias">${data.alias}</div>
+        </div>
+        <div class="char-info">
+          <div class="char-label">Character Profile</div>
+          <div class="char-name">${heroName}</div>
+          <div class="char-tags">${tagHtml}</div>
+          <div class="char-divider"></div>
+          <p class="char-bio">${data.bio}</p>
+          <div class="char-powers-label">Abilities &amp; Powers</div>
+          <div class="char-powers">${powerHtml}</div>
+          ${appearances.length ? renderAppearances(appearances) : ''}
+        </div>
+      </div>`;
+  }, 350);
+}
+
+function renderAppearances(appearances) {
+  const rows = appearances.map((m, i) => `
+    <div class="char-film-row" style="animation-delay:${i * 80 + 200}ms" onclick="goToFilmFromChar(${m.id})">
+      <div class="film-row-num">${String(m.id).padStart(2,'0')}</div>
+      <div class="film-row-info">
+        <div class="film-row-title">${m.title}</div>
+        <div class="film-row-year">Phase ${m.phase} · ${m.year}</div>
+      </div>
+      <div class="film-row-arrow">›</div>
+    </div>`).join('');
+  return `<div class="char-appearances-label">Appears In</div><div class="char-films">${rows}</div>`;
+}
+
+function goToFilmFromChar(movieId) {
+  // Close char page, open that movie's detail
+  document.getElementById('charPage').classList.remove('active');
+  const movie = MOVIES.find(m => m.id === movieId);
+  if (movie) openDetail(movie);
+}
+
+document.getElementById('charBackBtn').addEventListener('click', () => {
+  document.getElementById('charPage').classList.remove('active');
+  // Re-open the detail page we came from if we have it
+  if (currentMovieForChar) {
+    const movie = MOVIES.find(m => m.id === currentMovieForChar);
+    if (movie && !document.getElementById('detailPage').classList.contains('active')) {
+      openDetail(movie);
+    }
+  }
+});
+
+// Press Escape to close auth / detail
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') {
+    if (document.getElementById('loginPage').classList.contains('active') ||
+        document.getElementById('signupPage').classList.contains('active')) { closeAuth(); }
+    else if (document.getElementById('detailPage').classList.contains('active')) {
+      document.getElementById('detailPage').classList.remove('active');
+      document.body.style.overflow = '';
+    }
+  }
+});
+
+// Escape closes char page too
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape' && document.getElementById('charPage').classList.contains('active')) {
+    document.getElementById('charPage').classList.remove('active');
+    if (currentMovieForChar) {
+      const movie = MOVIES.find(m => m.id === currentMovieForChar);
+      if (movie) openDetail(movie);
+    }
+  }
+});
+
+// Init
+updateAuthUI();
+renderGrid('all');
+spawnParticles();
+</script>
+</body>
+</html>
